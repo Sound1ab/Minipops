@@ -1,0 +1,45 @@
+// variables //
+
+// Layout
+
+	$headerWidth: 		250;
+
+// Typography
+// -------------------------
+
+	// family
+	$ffBase: 			'Roboto', sans-serif;
+	$ffSecondary: 		'Roboto', sans-serif;
+	$ffHeadings: 		'Roboto', sans-serif;
+
+
+	// style
+	$fzBase: 			16 !default;
+	$lhBase: 			19 !default;
+	$fwBase: 			400;
+
+// Colours
+
+	$primaryColour: #2a2736;
+	$secondaryColour: #f4f3f4;
+	$tertiaryColour: #e24347;
+	$quaternaryColour: 	#6FB98F;
+	$quinaryColour: 	#6FB98F;
+
+// Headings
+// -------------------------
+
+	$headings: 							'.alpha','.beta','.gamma','.delta';
+	$headingSizes: 						40, 32, 24, 18;
+	$headingFamilies: 					$ffHeadings, $ffHeadings, $ffHeadings, $ffHeadings;
+	$headingColors: 					inherit , inherit, inherit, inherit;
+	$headingMargins: 					16, 16, 8, 4;
+	$headingLineHeights: 				34, 30, 26, 24;
+	$headingFontWeights: 				300, 300, 500, 500;
+	$breakpoints: (
+	    xs: 480px,
+	     s: 640px,
+	     m: 960px,
+	     l: 1200px,
+	    xl: 1440px
+	);

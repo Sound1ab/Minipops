@@ -1,0 +1,8 @@
+// This stylesheet contains all ethereal sass content such as variables, mixins and placeholders. Anything that doesn't get output as CSS.
+
+// Settings
+@import "settings/variables";
+
+// Tools
+@import "tools/mixins";
+@import "tools/placeholders";

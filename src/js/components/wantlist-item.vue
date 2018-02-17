@@ -1,0 +1,81 @@
+<template>
+	<div
+		class="wantlist-item"
+		:class="{'wantlist-item--watching': watching}"
+	>
+		<background-image class="wantlist-item__background-image" :image="imageUrl"></background-image>
+		<div class="wantlist-item__copy-outer">
+			<h1 class="wantlist-item__title">{{title}}</h1>
+		</div>
+		<div class="wantlist-item__drag">
+			<svgicon
+				name="drag-vertical"
+				:color="'#E24347'"
+				width="30"
+				height="30"
+			>
+			</svgicon>
+		</div>
+	</div>
+</template>
+
+<script>
+	import VueTypes from 'vue-types';
+	import BackgroundImage from '@/js/atomic/background-image';
+	import '@/assets/compiled-icons/drag-vertical';
+	export default {
+		name: 'wantlist-item',
+		components: {
+			BackgroundImage
+		},
+		props: {
+			title: VueTypes.string.def(''),
+			imageUrl: VueTypes.string.def(''),
+			id: VueTypes.number.def(0),
+			extraInfo: VueTypes.object.def({}),
+			watching: VueTypes.bool.def(false)
+		}
+	};
+</script>
+
+<style lang="scss" type="text/scss">
+	$height: 50;
+	.wantlist-item {
+		position: relative;
+		width: 100%;
+		background-color: white;
+		padding: em(8);
+		height: em(60);
+		z-index: 1;
+		display: flex;
+		justify-content: flex-start;
+		border-bottom: 1px solid lightgray;
+		&--watching {
+			box-shadow: inset -4px 0px 0px 0px $tertiaryColour;
+		}
+		&__background-image {
+			flex: 0 0 52px;
+			height: 100%;
+			margin-right: em(16);
+		}
+		&__copy-outer {
+			flex: 2 1 auto;
+			margin-right: em(8);
+			position: relative;
+			display: flex;
+			align-items: center;
+			overflow: hidden;
+		}
+		&__title {
+			margin-bottom: 0!important;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		&__drag {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+</style>

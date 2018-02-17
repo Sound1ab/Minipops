@@ -1,0 +1,27 @@
+* {
+	box-sizing: inherit;
+}
+
+*:after,
+*:before {
+	box-sizing: inherit;
+}
+
+html {
+	font-size: 10px;
+	box-sizing: border-box;
+
+	//background-color: $primaryColour;
+	height: 100%;
+}
+
+body {
+	font-family: $ffBase;
+	font-weight: $fwBase;
+	line-height: $lhBase / $fzBase;
+	@include font-size($fzBase);
+	color: black;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	height: 100%;
+}

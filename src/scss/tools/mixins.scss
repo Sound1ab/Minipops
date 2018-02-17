@@ -1,0 +1,53 @@
+// Convert pixels to ems
+// eg. for a relational value of 12px write em(12) when the parent is 16px
+// if the parent is another value say 24px write em(12, 24)
+@function em($pxval, $base: $fzBase) {
+  @return ($pxval / $base) * 1em;
+}
+
+@function rem($pxval) {
+	@return ($pxval / 10) * 1rem;
+}
+
+// Font sizing using rems with a fallback to px in unsupported
+// Font-size of 62.5% must be set on body
+@mixin font-size($sizeValue: 16){
+  font-size: $sizeValue + px;
+  font-size: ($sizeValue / 10) + rem;
+}
+
+// Max width media query
+@mixin mqMax($breakpoint) {
+	@if map-get($breakpoints, $breakpoint) {
+		@media (max-width: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+}
+
+// Max width media query
+@mixin mqMaxHeight($breakpoint) {
+	@if map-get($breakpoints, $breakpoint) {
+		@media (max-height: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+}
+
+// Min width media query
+@mixin mqMin($breakpoint) {
+	@if map-get($breakpoints, $breakpoint) {
+		@media (min-width: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+}
+
+// Max width media query
+@mixin mqMinHeight($breakpoint) {
+	@if map-get($breakpoints, $breakpoint) {
+		@media (min-height: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+}

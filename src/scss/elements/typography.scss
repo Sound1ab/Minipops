@@ -1,0 +1,18 @@
+// Headings
+// -------------------------
+
+h1,h2,h3,h4,h5 {
+	line-height: normal;
+}
+
+
+@for $i from 1 through length($headings) {
+	#{nth($headings,$i)}, .markdown h#{$i} {
+		font-size: em(nth($headingSizes,$i));
+		font-family: #{nth($headingFamilies,$i)};
+		color: #{nth($headingColors,$i)};
+		line-height: (nth($headingLineHeights,$i)/nth($headingSizes,$i));
+		font-weight: nth($headingFontWeights,$i);
+		margin-bottom: em(nth($headingMargins,$i),nth($headingSizes,$i));
+	}
+}

@@ -1,0 +1,36 @@
+%col {
+	.no-flexbox & {
+		display: inline-block;
+		vertical-align: top;
+		margin-left: em(-4);
+	}
+
+	&-wrap {
+		display: flex;
+	}
+
+	&--3 {
+		@extend %col;
+		width: 100 / 3 * 1%;
+	}
+
+	&--percent-20 {
+		@extend %col;
+		width: 20%;
+	}
+
+	&--percent-25 {
+		@extend %col;
+		width: 25%;
+	}
+
+	&--percent-75 {
+		@extend %col;
+		width: 75%;
+	}
+
+	&--percent-80 {
+		@extend %col;
+		width: 80%;
+	}
+}
