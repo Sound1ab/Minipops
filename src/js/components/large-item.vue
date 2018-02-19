@@ -10,13 +10,24 @@
 			@click="handleView(index)"
 		>
 		<transition name="fade-up">
-			<div class="large-item__inner" v-if="show">
+			<div
+				class="large-item__inner"
+				:class="{'large-item__inner--primary': primary}"
+				v-if="show"
+			>
 				<favourite
+					v-if="$route.params.id === 'discogs'"
 					:state="wantlistItem"
 					@add="handleAdd(index)"
 					@remove="handleRemove(index)"
 				></favourite>
-				<background-image class="large-item__background-image" :image="imageUrl"></background-image>
+				<star
+					v-if="primary">
+				</star>
+				<background-image
+					class="large-item__background-image"
+					:image="imageUrl"
+				></background-image>
 				<div class="large-item__copy-outer">
 					<h1 class="large-item__heading delta">{{title}}</h1>
 					<span class="large-item__time" v-if="endTime">{{endTime}}</span>
@@ -36,11 +47,13 @@
 	import VueTypes from 'vue-types';
 	import BackgroundImage from '@/js/atomic/background-image';
 	import Favourite from '@/js/atomic/favourite';
+	import Star from '@/js/atomic/star';
 	export default {
 		name: 'large-item',
 		components: {
 			BackgroundImage,
-			Favourite
+			Favourite,
+			Star
 		},
 		props: {
 			title: VueTypes.string.def(''),
@@ -55,7 +68,8 @@
 			id: VueTypes.number.def(0),
 			index: VueTypes.number.def(0),
 			wantlistItem: VueTypes.bool.def(false),
-			disable: VueTypes.bool.def(false)
+			disable: VueTypes.bool.def(false),
+			primary: VueTypes.bool.def(false)
 		},
 		data () {
 			return {
@@ -81,7 +95,6 @@
 				this.$emit('view', index);
 			},
 			observerCallback () {
-				console.log('fire');
 				this.show = true;
 			}
 		}
@@ -120,6 +133,10 @@
 			display: flex;
 			flex-direction: column;
 			cursor: pointer;
+			transition: all .5s;
+			&:hover {
+				box-shadow: 0 0 20px 4px rgba(0,0,0,.1);
+			}
 		}
 		&__background-image {
 			flex: 0 0 70%;

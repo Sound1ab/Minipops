@@ -1,13 +1,18 @@
 <template>
 	<div class="background-image">
 		<div
-			v-if="image"
+			v-if="image && progressiveImage"
 			class="background-image__image"
 			v-progressive-image="{
 					src: image,
 					placeholder: requireImage('prog-image.png'),
 					background: true
 				}"
+		></div>
+		<div
+			v-if="image && !progressiveImage"
+			class="background-image__image"
+			:style="background"
 		></div>
 		<div v-if="gradient" class="background-image__gradient"></div>
 		<slot></slot>
@@ -20,7 +25,8 @@
 		name: 'background-image',
 		props: {
 			image: VueTypes.string.def(''),
-			gradient: VueTypes.bool.def(false)
+			gradient: VueTypes.bool.def(false),
+			progressiveImage: VueTypes.bool.def(true)
 		},
 		computed: {
 			background () {
@@ -35,10 +41,13 @@
 <style lang="scss" type="text/scss">
 	.background-image {
 		background-color: $tertiaryColour;
+		position: relative;
 		&__image {
 			background-position: center;
 			background-size: cover;
-			position: relative;
+			position: absolute;
+			top: 0;
+			left: 0;
 			width: 100%;
 			height: 100%;
 		}

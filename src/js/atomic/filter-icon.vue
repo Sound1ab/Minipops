@@ -1,7 +1,7 @@
 <template>
 	<svgicon
 		name="filter-variant"
-		color="white"
+		:color="disabled ? 'grey' : 'white'"
 		width="30"
 		height="30"
 		class="filter-icon"
@@ -10,9 +10,13 @@
 </template>
 
 <script>
+	import VueTypes from 'vue-types';
 	import '@/assets/compiled-icons/filter-variant';
 	export default {
-		name: 'filter-icon'
+		name: 'filter-icon',
+		props: {
+			disabled: VueTypes.bool.def(false)
+		}
 	};
 </script>
 

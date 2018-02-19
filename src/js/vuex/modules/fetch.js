@@ -89,8 +89,17 @@ const mutations = {
 };
 
 const getters = {
-	sortItems: (state) => (tab) => {
-		return filter[state.sort](state[tab].items);
+	cleanItems: (state, getters, rootState) => {
+		const tab = rootState.toggle.state;
+		if (state[tab] && state[tab].items && state[tab].items.length > 1) {
+			return state[tab].items;
+		}
+	},
+	sortItems: (state, getters, rootState) => {
+		const tab = rootState.toggle.state;
+		if (state[tab] && state[tab].items && state[tab].items.length > 1) {
+			return filter[state.sort](state[tab].items);
+		}
 	},
 	averagePrice: state => (tab) => {
 		if (state[tab] && state[tab].items && state[tab].items.length > 1) {

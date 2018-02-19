@@ -5,6 +5,7 @@
 			class="heading-bar__menu"
 			:color="'white'"
 			@menuClick="handleMenuClick"
+			@backClick="handleBackClick"
 		>
 		</menu-button>
 		<main-heading
@@ -19,7 +20,9 @@
 			@searchSubmit="handleSearchSubmit"
 		>
 		</search-bar>
-		<sort></sort>
+		<sort
+			:disabled="tab !== 'current' && tab !== 'completed'"
+		></sort>
 	</nav>
 </template>
 
@@ -28,7 +31,7 @@
 	import MainHeading from '@/js/atomic/main-heading';
 	import SearchBar from '@/js/components/search-bar';
 	import Sort from '@/js/components/sort';
-	import {mapActions} from 'vuex';
+	import {mapActions, mapState} from 'vuex';
 	export default {
 		name: 'heading-bar',
 		components: {
@@ -36,6 +39,11 @@
 			MainHeading,
 			SearchBar,
 			Sort
+		},
+		computed: {
+			...mapState({
+				tab: state => state.toggle.state
+			})
 		},
 		methods: {
 			...mapActions([
@@ -49,6 +57,9 @@
 			},
 			handleButtonClick () {
 				console.log('fire');
+			},
+			handleBackClick () {
+				this.$router.go(-1);
 			}
 		}
 	};

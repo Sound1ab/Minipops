@@ -94,7 +94,6 @@
 				});
 			},
 			handleClick (index) {
-				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
 				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
 			},
 			handleWatch (index) {

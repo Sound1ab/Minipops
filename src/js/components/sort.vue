@@ -1,13 +1,18 @@
 <template>
-	<div class="sort" @click="handleIconClick">
-		<filter-icon class="sort__button"></filter-icon>
-		<transition name="fade" mode="out-in">
-			<floating-menu
-				v-if="show && ($route.params.id === 'current' || $route.params.id === 'completed')"
-				:show="show"
+	<div
+		class="sort"
+		@click="handleIconClick"
+	>
+		<filter-icon
+			class="sort__button"
+			:disabled="disabled"
+		></filter-icon>
+			<tooltip
+				:nudge="'56px'"
+				:size="'16px'"
 				class="sort__menu"
+				v-if="show && !disabled"
 			>
-				<!--<h2 class="gamma">Filter options</h2>-->
 				<ul class="sort__list">
 					<li
 						v-for="element in sortList"
@@ -18,22 +23,26 @@
 						{{element}}
 					</li>
 				</ul>
-			</floating-menu>
-		</transition>
+			</tooltip>
 	</div>
-
 </template>
 
 <script>
+	import VueTypes from 'vue-types';
 	import FilterIcon from '@/js/atomic/filter-icon';
 	import FloatingMenu from '@/js/atomic/floating-menu';
+	import Tooltip from '@/js/atomic/tooltip';
 	import {filterKeys} from '@/js/vuex/filter';
 	import {mapState, mapActions} from 'vuex';
 	export default {
 		name: 'sort',
 		components: {
 			FilterIcon,
-			FloatingMenu
+			FloatingMenu,
+			Tooltip
+		},
+		props: {
+			disabled: VueTypes.bool.def(false)
 		},
 		data () {
 			return {
@@ -43,7 +52,7 @@
 		computed: {
 			...mapState({
 				sort: state => state.ui.sort,
-				activeSort: state => state.search.sort
+				activeSort: state => state.fetch.sort
 			}),
 			sortList () {
 				return [filterKeys.priceLowHigh, filterKeys.priceHighLow, filterKeys.endSoon];
@@ -55,6 +64,9 @@
 				'SORT'
 			]),
 			handleIconClick () {
+				if (this.disabled) {
+					return;
+				}
 				this.show = !this.show;
 			},
 			handleFilterClick (sort) {
@@ -78,18 +90,19 @@
 			background-color: transparent;
 		}
 		&__menu {
-			position: absolute;
-			bottom: -8px;
-			right: -8px;
-			transform: translateY(100%);
+			position: absolute!important;
+			width: em(180);
+			top: 100%;
+			right: 0;
 		}
 		&__list-item {
 			margin-bottom: em(8);
+			cursor: pointer;
 			&:last-child {
 				margin-bottom: 0;
 			}
 			&--active {
-				color: $tertiaryColour;
+				color: darken($tertiaryColour, 30%);
 			}
 		}
 	}

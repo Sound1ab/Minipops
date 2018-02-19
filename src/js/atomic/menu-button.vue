@@ -1,13 +1,24 @@
 <template>
-	<div @click="handleClick" class="menu-button">
-		<svgicon
-			name="menu"
-			:color="color"
-			width="30"
-			height="30"
-			id="open-menu"
-		>
-		</svgicon>
+	<div>
+		<div v-if="$route.name === 'related-artists'" @click="handleBackClick" class="menu-button">
+			<svgicon
+				name="chevron-left"
+				:color="color"
+				width="30"
+				height="30"
+				id="back-button"
+			>
+			</svgicon>
+		</div>
+		<div v-else @click="handleMenuClick" class="menu-button">
+			<svgicon
+				name="menu"
+				:color="color"
+				width="30"
+				height="30"
+			>
+			</svgicon>
+		</div>
 	</div>
 </template>
 
@@ -20,8 +31,11 @@
 			color: VueTypes.string.def('white')
 		},
 		methods: {
-			handleClick () {
+			handleMenuClick () {
 				this.$emit('menuClick');
+			},
+			handleBackClick () {
+				this.$emit('backClick');
 			}
 		}
 	};

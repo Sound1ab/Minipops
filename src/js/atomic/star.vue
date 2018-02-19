@@ -1,25 +1,8 @@
 <template>
-	<div
-		class="favourite"
-	>
-		<div
-			v-if="state"
-			@click.stop="handleRemove"
-		>
+	<div class="star">
+		<div>
 			<svgicon
-				name="heart"
-				:color="'white'"
-				width="24"
-				height="24"
-			>
-			</svgicon>
-		</div>
-		<div
-			v-else
-			@click.stop="handleAdd"
-		>
-			<svgicon
-				name="heart-outline"
+				name="star"
 				:color="'white'"
 				width="24"
 				height="24"
@@ -31,8 +14,7 @@
 
 <script>
 	import VueTypes from 'vue-types';
-	import '@/assets/compiled-icons/heart-outline';
-	import '@/assets/compiled-icons/heart';
+	import '@/assets/compiled-icons/star';
 	export default {
 		name: 'favourite',
 		props: {
@@ -50,7 +32,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-	.favourite {
+	.star {
 		$size: em(32);
 		position: absolute;
 		top: calc((#{$size} / 3) * -1);

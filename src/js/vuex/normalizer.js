@@ -85,7 +85,8 @@ function refineRelatedArtists (artists) {
 			imageUrl: el.images[0].url,
 			genres: el.genres,
 			itemUrl: el.external_urls.spotify,
-			spotifyId: el.id
+			spotifyId: el.id,
+			primary: !!(el.primary)
 		};
 	});
 }

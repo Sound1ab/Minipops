@@ -4,6 +4,7 @@
 		<large-item
 			v-for="(element, index) in items"
 			:key="`${tab}-${element.title}-${index}`"
+			:data-index="index"
 			:title="element.title"
 			:price="element.price"
 			:item-url="element.itemUrl"
@@ -16,6 +17,7 @@
 			:id="element.id"
 			:index="index"
 			:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"
+			:primary="element.primary"
 			@add="handleAdd"
 			@remove="handleRemove"
 			@view="handleView"
@@ -84,10 +86,16 @@
 				wantlistState: state => state.wantlist.state
 			}),
 			...mapGetters([
-				'wantlistTitles'
+				'wantlistTitles',
+				'cleanItems',
+				'sortItems'
 			]),
 			items () {
-				return this.$store.getters.sortItems(this.tab);
+				if (this.tab === 'current' || this.tab === 'completed') {
+					return this.sortItems;
+				} else {
+					return this.cleanItems;
+				}
 			},
 			swipeToRevealConfig () {
 				return {

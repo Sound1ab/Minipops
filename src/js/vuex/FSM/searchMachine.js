@@ -9,7 +9,8 @@ export const searchMachine = Machine({
 	states: {
 		closed: {
 			on: {
-				SEARCH_SELECTED: 'searching'
+				SEARCH_SELECTED: 'searching',
+				TEXT_INPUT: 'searching.typing'
 			}
 		},
 		searching: {
