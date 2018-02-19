@@ -10,7 +10,7 @@ function intersectionCallback (callback, entries, observer) {
 function intersectOptions (root) {
 	return {
 		root,
-		rootMargin: '100px 0px',
+		rootMargin: '50px 0px',
 		threshold: 0
 	};
 }

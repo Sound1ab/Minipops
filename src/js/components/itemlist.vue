@@ -1,58 +1,79 @@
 <template>
 	<ul class="itemlist">
 		<!--v-if="items.length > 0 && index <= dripFeed"-->
-		<swipe-to-reveal
-			v-infinite-scroll="{
-				root: 'scrolling-container',
-				callback: observerCallback,
-				lastElement: index === dripFeed
-			}"
+		<large-item
 			v-for="(element, index) in items"
 			:key="`${tab}-${element.title}-${index}`"
-			:configuration="swipeToRevealConfig"
+			:title="element.title"
+			:price="element.price"
+			:item-url="element.itemUrl"
+			:image-url="element.imageUrl"
+			:end-time="element.endTime"
+			:bids="element.bids"
+			:postage="element.postage"
+			:location="element.location"
+			:country="element.country"
+			:id="element.id"
 			:index="index"
-			:data-index="index"
-			:reset="wantlistConfirmation.state && wantlistConfirmation.value"
-			:button-state="checkTitleAgainstWantlistTitle(element.title, true) ? 'remove' : 'add'"
-			:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"
+			:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"
 			@add="handleAdd"
 			@remove="handleRemove"
-			@onClick="handleView"
-		>
-			<item
-				:title="element.title"
-				:price="element.price"
-				:item-url="element.itemUrl"
-				:image-url="element.imageUrl"
-				:end-time="element.endTime"
-				:bids="element.bids"
-				:postage="element.postage"
-				:location="element.location"
-				:country="element.country"
-				:id="element.id"
-				:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"
-				:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"
-			></item>
-		</swipe-to-reveal>
+			@view="handleView"
+		></large-item>
+		<!--<swipe-to-reveal-->
+			<!--v-infinite-scroll="{-->
+				<!--root: 'scrolling-container',-->
+				<!--callback: observerCallback,-->
+				<!--lastElement: index === dripFeed-->
+			<!--}"-->
+			<!--v-for="(element, index) in items"-->
+			<!--:key="`${tab}-${element.title}-${index}`"-->
+			<!--:configuration="swipeToRevealConfig"-->
+			<!--:index="index"-->
+			<!--:data-index="index"-->
+			<!--:reset="wantlistConfirmation.state && wantlistConfirmation.value"-->
+			<!--:button-state="checkTitleAgainstWantlistTitle(element.title, true) ? 'remove' : 'add'"-->
+			<!--:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"-->
+			<!--@add="handleAdd"-->
+			<!--@remove="handleRemove"-->
+			<!--@onClick="handleView"-->
+		<!--&gt;-->
+			<!--<item-->
+				<!--:title="element.title"-->
+				<!--:price="element.price"-->
+				<!--:item-url="element.itemUrl"-->
+				<!--:image-url="element.imageUrl"-->
+				<!--:end-time="element.endTime"-->
+				<!--:bids="element.bids"-->
+				<!--:postage="element.postage"-->
+				<!--:location="element.location"-->
+				<!--:country="element.country"-->
+				<!--:id="element.id"-->
+				<!--:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"-->
+				<!--:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"-->
+			<!--&gt;</item>-->
+		<!--</swipe-to-reveal>-->
 	</ul>
 </template>
 
 <script>
 	import Item from '@/js/components/item';
+	import LargeItem from '@/js/components/large-item';
 	import SwipeToReveal from '@/js/components/swipe-to-reveal';
 	import {mapState, mapActions, mapGetters} from 'vuex';
 	import {lowerCaseAndReplaceSpace} from '@/js/filters/lowerCaseAndReplaceSpace';
 	import {removePunctuation} from '@/js/filters/removePunctuation';
 	export default {
 		name: 'Itemlist',
+		components: {
+			Item,
+			LargeItem,
+			SwipeToReveal
+		},
 		data () {
 			return {
 				dripFeed: 10
 			};
-		},
-		components: {
-			Item,
-			SwipeToReveal
 		},
 		computed: {
 			...mapState({
@@ -178,6 +199,6 @@
 
 <style lang="scss" type="text/scss">
 	.itemlist {
-
+		padding: em(8);
 	}
 </style>

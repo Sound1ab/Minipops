@@ -54,13 +54,6 @@
 			truncate (val) {
 				return val.substring(0, 10);
 			}
-		},
-		computed: {
-			background () {
-				return {
-					backgroundImage: `url('${this.imageUrl}')`
-				};
-			}
 		}
 	};
 </script>
