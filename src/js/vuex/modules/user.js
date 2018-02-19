@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {userMachine} from '@/assets/FSM/userMachine';
+import {userMachine} from '@/js/vuex/FSM/userMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {getFromLocalStorage, saveToLocalStorage} from '@/js/helpers/localStorage';
 import {USER} from '@/js/vuex/api';

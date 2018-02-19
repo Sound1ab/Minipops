@@ -56,7 +56,7 @@
 		},
 		computed: {
 			...mapState({
-				tab: state => state.toggle.state.buttonSelected,
+				tab: state => state.toggle.state,
 				query: state => state.search.query,
 				wantlistConfirmation: state => state.wantlist.confirmation,
 				wantlist: state => state.wantlist.items,
@@ -122,9 +122,9 @@
 			pushArtistRoute (artist) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
 				this.$router.push({
-					name: `artist`,
+					name: `related-artists`,
 					params: {
-						artist: artistPath
+						id: artistPath
 					}
 				});
 			},

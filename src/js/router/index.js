@@ -14,15 +14,15 @@ export default new Router({
 	routes: [
 		{path: '/', redirect: '/current'},
 		{
-			path: '/:id',
-			name: 'items',
-			component: ItemView,
+			path: '/related-artists/:id',
+			name: 'related-artists',
+			component: ArtistView,
 			props: true
 		},
 		{
-			path: '/related-artists/:artist',
-			name: 'artist',
-			component: ArtistView,
+			path: '/:id',
+			name: 'items',
+			component: ItemView,
 			props: true
 		}
 	]

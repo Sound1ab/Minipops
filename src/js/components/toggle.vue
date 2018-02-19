@@ -10,6 +10,7 @@
 					:isActive="obj.path === currentTab"
 					:heading="obj.heading"
 					:path="obj.path"
+					:name="obj.name"
 					@toggleButton="handleToggleButton"
 				>
 				</toggle-button>
@@ -30,36 +31,54 @@
 		},
 		computed: {
 			...mapState({
-				currentTab: state => state.toggle.state.buttonSelected
+				currentTab: state => state.toggle.state
 			}),
 			data () {
 				return [
 					{
 						heading: 'eBay Current',
-						path: 'current'
+						path: 'current',
+						name: 'items'
 					},
 					{
 						heading: 'eBay Completed',
-						path: 'completed'
+						path: 'completed',
+						name: 'items'
 					},
 					{
 						heading: 'Discogs',
-						path: 'discogs'
+						path: 'discogs',
+						name: 'items'
 					},
 					{
 						heading: 'Related Artists',
-						path: 'related-artists'
+						path: 'related-artists',
+						name: 'items'
 					}
 				];
 			}
 		},
 		methods: {
 			...mapActions([
-				'TOGGLE_TRANSITION'
+				'UPDATE_TOGGLE_STATE'
 			]),
-			handleToggleButton (path) {
-				this.TOGGLE_TRANSITION({type: 'CLICK', params: {path, router: this.$router}});
+			handleToggleButton ({path}) {
+				this.UPDATE_TOGGLE_STATE(path);
+			},
+			syncState (val) {
+				let tab = this.data.filter(el => {
+					return el.path === val;
+				})[0];
+				this.$router.push({name: tab.name, params: {id: tab.path}});
 			}
+		},
+		watch: {
+			'currentTab': function (val) {
+				this.syncState(val);
+			}
+		},
+		created () {
+			this.UPDATE_TOGGLE_STATE(this.$route.params.id);
 		}
 	};
 </script>

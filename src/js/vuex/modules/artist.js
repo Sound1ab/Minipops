@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {artistMachine} from '@/assets/FSM/artistMachine';
+import {artistMachine} from '@/js/vuex/FSM/artistMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {ITEMS} from '@/js/vuex/api';
 
@@ -10,22 +10,20 @@ const state = {
 
 const actions = {
 	ARTIST_TRANSITION: transition.bind(null, artistMachine),
-	FETCH_ARTIST_DATA ({commit, dispatch, rootState}, {params: {artist}, callback}) {
+	FETCH_ARTIST_DATA ({commit, dispatch, rootState}, {params: {query}}) {
 		const user = rootState.user.user;
-		if (!artist || !user) {
+		if (!query || !user) {
 			dispatch('ARTIST_TRANSITION', {type: 'FAILURE'});
 		}
-		axios.get(ITEMS['artist'], {params: {user, artist}})
+		axios.get(ITEMS['artist'], {params: {user, artist: query}})
 			.then(res => {
 				console.log(res);
 				commit('updateArtistInfo', res.data);
 				dispatch('ARTIST_TRANSITION', {type: 'SUCCESS'});
-				callback();
 			})
 			.catch(err => {
 				console.log(err);
 				dispatch('ARTIST_TRANSITION', {type: 'FAILURE'});
-				callback();
 			});
 	}
 };

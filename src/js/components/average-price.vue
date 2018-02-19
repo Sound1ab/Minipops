@@ -16,8 +16,8 @@
 		},
 		computed: {
 			...mapState({
-				tab: state => state.toggle.state.buttonSelected,
-				completedItems: state => state.search.completed.items
+				tab: state => state.toggle.state,
+				completedItems: state => state.fetch.completed.items
 			}),
 			averagePrice () {
 				return this.$store.getters.averagePrice(this.tab);

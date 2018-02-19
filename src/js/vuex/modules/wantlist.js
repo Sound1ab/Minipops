@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {wantlistMachine} from '@/assets/FSM/wantlistMachine';
+import {wantlistMachine} from '@/js/vuex/FSM/wantlistMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {saveToLocalStorage, getFromLocalStorage, removeItemFromLocalStorage} from '@/js/helpers/localStorage';
 import {WANTLIST} from '@/js/vuex/api';

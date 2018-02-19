@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {watchMachine} from '@/assets/FSM/watchMachine';
+import {watchMachine} from '@/js/vuex/FSM/watchMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {SUBSCRIBE} from '@/js/vuex/api';
 

@@ -84,7 +84,7 @@
 		methods: {
 			...mapActions([
 				'SEARCH_TRANSITION',
-				'TOGGLE_TRANSITION'
+				'UPDATE_TOGGLE_STATE'
 			]),
 			handleSlideClick () {
 				const clickedIndex = this.$refs['mySwiper'].swiper.clickedIndex;
@@ -93,7 +93,7 @@
 				const path = 'discogs';
 				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
 				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: searchQuery}});
-				this.TOGGLE_TRANSITION({type: 'CLICK', params: {path, router: this.$router}});
+				this.UPDATE_TOGGLE_STATE(path);
 			}
 		}
 	};

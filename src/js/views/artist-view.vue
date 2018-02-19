@@ -1,99 +1,26 @@
 <template>
 	<scrolling-container class="artist-view" id="scrolling-container">
-		<background-image
-			v-if="artistInfo.images"
-			class="artist-view__banner"
-			:image="artistInfo.images[0].resource_url"
-			:gradient="true"
-		>
-			<main-heading
-				class="artist-view__title"
-				:text="artistInfo.name"
-				:color="'white'"
-				:className="'alpha'"
-			>
-			</main-heading>
-		</background-image>
-		<main-heading
-			v-else="!artistInfo.images && artistInfo.name"
-			class="artist-view__title"
-			:text="artistInfo.name"
-			:color="'white'"
-			:className="'alpha'"
-		>
-		</main-heading>
-		<profile
-			v-if="artistInfo.profile"
-			:profile="artistInfo.profile"
-		></profile>
-		<album-gallery
-			v-if="artistInfo.releases"
-			:slides="artistInfo.releases"
-		></album-gallery>
-		<extra-info
-			v-if="members || artistInfo.namevariations || artistInfo.urls"
-			:members="members"
-			:name-variations="artistInfo.namevariations"
-			:links="artistInfo.urls"
-		></extra-info>
+		<transition name="fade-up" mode="out-in">
+			<artist v-if="state !== 'fetchingArtistData'" :key="artistInfo.name"></artist>
+		</transition>
 	</scrolling-container>
 </template>
 
 <script>
-	import Store from '@/js/vuex/index';
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
-	import BackgroundImage from '@/js/atomic/background-image';
-	import MainHeading from '@/js/atomic/main-heading';
-	import Profile from '@/js/components/profile';
-	import AlbumGallery from '@/js/components/album-gallery';
-	import ExtraInfo from '@/js/atomic/extra-info';
+	import Artist from '@/js/components/artist';
 	import {mapState} from 'vuex';
+
 	export default {
 		name: 'artist-view',
 		components: {
-			ScrollingContainer,
-			BackgroundImage,
-			MainHeading,
-			Profile,
-			AlbumGallery,
-			ExtraInfo
-		},
-		beforeRouteEnter (to, from, next) {
-			if (!Store.state.user || !Store.state.user.user) {
-				Store.watch(
-					function (state) {
-						return state.user.user;
-					},
-					function () {
-						Store.dispatch('ARTIST_TRANSITION', {
-							type: 'LOADED',
-							params: {
-								artist: to.params.artist.replace(/-/g, ' ')
-							},
-							callback: () => {
-								next();
-							}
-						});
-					},
-					{
-						deep: true
-					}
-				);
-				return;
-			}
-			Store.dispatch('ARTIST_TRANSITION', {
-				type: 'LOADED',
-				params: {
-					artist: to.params.artist.replace(/-/g, ' ')
-				},
-				callback: () => {
-					next();
-				}
-			});
+			Artist,
+			ScrollingContainer
 		},
 		computed: {
 			...mapState({
-				artistInfo: state => state.artist.artistInfo
+				artistInfo: state => state.artist.artistInfo,
+				state: state => state.artist.state
 			}),
 			members () {
 				if (!this.artistInfo.members) {
@@ -101,6 +28,40 @@
 				}
 				return this.artistInfo.members.map(el => `${el.name} ${el.active ? '- active' : ''}`);
 			}
+		},
+		methods: {
+			onLoad () {
+				let query;
+				if (!this.$route.params.id) {
+					query = this.$store.state.search.query || '';
+				} else {
+					query = this.$route.params.id.replace(/-/g, ' ');
+				}
+				if (!query) {
+					return;
+				}
+				this.$store.dispatch('ARTIST_TRANSITION', {
+					type: 'LOADED',
+					params: {
+						query
+					}
+				});
+			}
+		},
+		created () {
+			if (!this.$store.state.user || !this.$store.state.user.user) {
+				this.$store.watch(
+					function (state) {
+						return state.user.user;
+					},
+					this.onLoad,
+					{
+						deep: true
+					}
+				);
+				return;
+			}
+			this.onLoad();
 		}
 	};
 </script>

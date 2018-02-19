@@ -11,7 +11,9 @@
 			<heading-bar></heading-bar>
 			<toggle></toggle>
 			<average-price></average-price>
-			<router-view class="router-view"/>
+			<!--<transition name="fade-up" mode="out-in">-->
+				<router-view class="router-view"/>
+			<!--</transition>-->
 		</span>
 		<loading></loading>
 		<confirmation></confirmation>
@@ -49,7 +51,7 @@
 				search: state => state.search,
 				open: state => state.ui.menu,
 				user: state => state.user.user,
-				tab: state => state.toggle.state.buttonSelected
+				tab: state => state.toggle.state
 			})
 		},
 		methods: {

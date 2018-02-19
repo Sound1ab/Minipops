@@ -1,6 +1,6 @@
 <template>
 	<button
-		@click="handleClick(path)"
+		@click="handleClick(path, name)"
 		class="toggle-button"
 		:class="{'toggle-button--active': isActive}"
 	>
@@ -15,7 +15,8 @@
 		props: {
 			isActive: VueTypes.bool.def(false),
 			heading: VueTypes.string.def(''),
-			path: VueTypes.string.def('')
+			path: VueTypes.string.def(''),
+			name: VueTypes.string.def('')
 		},
 		filters: {
 			upperCase (val) {
@@ -23,8 +24,8 @@
 			}
 		},
 		methods: {
-			handleClick (path) {
-				this.$emit('toggleButton', path.toLowerCase());
+			handleClick (path, name) {
+				this.$emit('toggleButton', {path: path.toLowerCase(), name});
 			}
 		}
 	};

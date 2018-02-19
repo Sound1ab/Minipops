@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {subscriptionMachine} from '@/assets/FSM/subscriptionMachine';
+import {subscriptionMachine} from '@/js/vuex/FSM/subscriptionMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {SUBSCRIBE} from '@/js/vuex/api';
 import {urlB64ToUint8Array} from '@/js/helpers/url-b64-to-uint8-array';

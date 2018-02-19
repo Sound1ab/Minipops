@@ -1,58 +1,50 @@
 <template>
 	<scrolling-container class="item-view" id="scrolling-container">
-		<itemlist v-if="!(state['fetchingData'] === 'request')"></itemlist>
+		<transition name="fade-up" mode="out-in">
+			<itemlist :key="tab" v-if="state !== 'fetchingData'"></itemlist>
+		</transition>
 	</scrolling-container>
 </template>
 
 <script>
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	import Itemlist from '@/js/components/itemlist';
-	import Store from '@/js/vuex/index';
 	import {mapState} from 'vuex';
+
 	export default {
 		name: 'item-view',
 		components: {
 			ScrollingContainer,
 			Itemlist
 		},
-		beforeRouteEnter (to, from, next) {
-			const query = Store.state.search.query;
-			const routeEntering = to.params.id;
-			const routeEnteringQuery = Store.state.search[routeEntering].query;
-			if (!query) {
-				next();
-				return;
-			}
-			Store.dispatch('SEARCH_TRANSITION', {
-				type: 'TAB_UPDATED',
-				params: {
-					query,
-					routeEnteringQuery
-				},
-				callback: () => {
-					next();
-				}
-			});
-		},
-		beforeRouteUpdate (to, from, next) {
-			const query = this.$store.state.search.query;
-			const routeEntering = to.params.id;
-			const routeEnteringQuery = this.$store.state.search[routeEntering].query;
-			this.$store.dispatch('SEARCH_TRANSITION', {
-				type: 'TAB_UPDATED',
-				params: {
-					query,
-					routeEnteringQuery
-				},
-				callback: () => {
-					next();
-				}
-			});
-		},
 		computed: {
 			...mapState({
-				state: state => state.search.state
+				state: state => state.fetch.state,
+				tab: state => state.toggle.state
 			})
+		},
+		methods: {
+			onLoad () {
+				const query = this.$store.state.search.query;
+				const routeEntering = this.$route.params.id;
+				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
+				if (!query) {
+					return;
+				}
+				this.$store.dispatch('FETCH_TRANSITION', {
+					type: 'FETCH_DATA_REQUEST',
+					extState: {
+						query,
+						routeEnteringQuery
+					}
+				});
+			}
+		},
+		watch: {
+			'$route': 'onLoad'
+		},
+		created () {
+			this.onLoad();
 		}
 	};
 </script>

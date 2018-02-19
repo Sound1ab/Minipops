@@ -28,15 +28,15 @@
 
 // Fade up
 .fade-up-enter-active {
-	animation: fade-up .5s;
+	animation: fade-up .25s;
 }
 .fade-up-leave-active {
-	animation: fade-up .5s reverse;
+	animation: fade-up .25s reverse;
 }
 @keyframes fade-up {
 	0% {
 		opacity: 0;
-		transform: translateY(20px);
+		transform: translateY(10px);
 	}
 	100% {
 		opacity: 1;
