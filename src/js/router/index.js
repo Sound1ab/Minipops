@@ -14,9 +14,9 @@ export default new Router({
 	routes: [
 		{path: '/', redirect: '/current'},
 		{
-			path: '/related-artists/:id',
-			name: 'related-artists',
-			component: ArtistView,
+			path: '/artist-releases/:artist',
+			name: 'artist-releases',
+			component: ItemView,
 			props: true
 		},
 		{

@@ -26,7 +26,12 @@
 		methods: {
 			onLoad () {
 				const query = this.$store.state.search.query;
-				const routeEntering = this.$route.params.id;
+				let routeEntering;
+				if (this.$route.params.artist) {
+					routeEntering = 'artist-releases';
+				} else {
+					routeEntering = this.$route.params.id;
+				}
 				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
 				if (!query) {
 					return;

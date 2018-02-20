@@ -2,7 +2,7 @@ import axios from 'axios';
 import {fetchMachine} from '@/js/vuex/FSM/fetchMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {ITEMS} from '@/js/vuex/api';
-import {removePunctuation} from '@/js/filters/removePunctuation';
+import {addSlashes} from '@/js/helpers/add-slashes';
 import {normalizer} from '@/js/vuex/normalizer';
 import {filter, filterKeys} from '@/js/vuex/filter';
 
@@ -29,6 +29,10 @@ const state = {
 		items: [],
 		query: ''
 	},
+	'artist-releases': {
+		items: [],
+		query: ''
+	},
 	sort: filterKeys.priceLowHigh
 };
 
@@ -47,7 +51,8 @@ const actions = {
 	},
 	FETCH_DATA ({commit, rootState, dispatch, state}, {params}) {
 		const currentTab = rootState.toggle.state;
-		const keywords = removePunctuation(rootState.search.query);
+		const keywords = addSlashes(rootState.search.query);
+		console.log('keywords', keywords);
 		const user = rootState.user.user || '';
 		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {

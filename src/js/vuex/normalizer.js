@@ -79,7 +79,7 @@ export function timeRemain (endPoint) {
 }
 
 function refineRelatedArtists (artists) {
-	return artists.success.map(el => {
+	return artists.map(el => {
 		return {
 			title: el.name,
 			imageUrl: el.images[0].url,
@@ -91,9 +91,20 @@ function refineRelatedArtists (artists) {
 	});
 }
 
+function refineArtistReleases (artists) {
+	return artists.map(el => {
+		return {
+			title: el.artist,
+			secondaryTitle: el.title,
+			imageUrl: el.thumb
+		};
+	});
+}
+
 export const normalizer = {
 	current: refineEbaylist,
 	completed: refineEbaylist,
 	discogs: refineDiscogs,
-	'related-artists': refineRelatedArtists
+	'related-artists': refineRelatedArtists,
+	'artist-releases': refineArtistReleases
 };

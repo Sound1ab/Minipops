@@ -25,6 +25,7 @@
 <script>
 	import VueTypes from 'vue-types';
 	import '@/assets/compiled-icons/menu';
+	import '@/assets/compiled-icons/chevron-left';
 	export default {
 		name: 'menu-button',
 		props: {

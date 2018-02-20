@@ -15,7 +15,7 @@ export const ITEMS = {
 	completed: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/completed-items',
 	discogs: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/discogs-items',
 	'related-artists': 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/related-artists',
-	artist: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/artist'
+	'artist-releases': 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/artist'
 };
 
 export const SUBSCRIBE = {

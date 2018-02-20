@@ -66,10 +66,7 @@
 				this.UPDATE_TOGGLE_STATE(path);
 			},
 			syncState (val) {
-				let tab = this.data.filter(el => {
-					return el.path === val;
-				})[0];
-				this.$router.push({name: tab.name, params: {id: tab.path}});
+				this.$router.push({name: 'items', params: {id: val}});
 			}
 		},
 		watch: {
@@ -92,6 +89,7 @@
 		background-color: transparent;
 		display: flex;
 		justify-content: space-between;
+		box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
 		&__button-outer {
 			display: inline-block;
 		}

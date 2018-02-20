@@ -4,7 +4,8 @@ import {transition} from '@/js/vuex/fsm-transition';
 import {saveToLocalStorage, getFromLocalStorage, removeItemFromLocalStorage} from '@/js/helpers/localStorage';
 import {WANTLIST} from '@/js/vuex/api';
 import {refineWantlist, extractReleaseId, refineReleases} from '@/js/vuex/normalizer';
-import {removePunctuation} from '@/js/filters/removePunctuation';
+import {addSlashes} from '@/js/helpers/add-slashes';
+import {removeBrackets} from '@/js/helpers/remove-brackets';
 import {filterAlphabetically} from '@/js/vuex/filter';
 
 export function createPromises (api, releaseIds, user) {
@@ -33,7 +34,7 @@ const actions = {
 		axios.post(WANTLIST.accessData, {user: rootState.user.user})
 			.then(res => {
 				const data = res.data;
-				if (data.success) {
+				if (data) {
 					dispatch('WANTLIST_TRANSITION', {type: 'SUCCESS'});
 				} else {
 					dispatch('WANTLIST_TRANSITION', {type: 'FAILURE'});
@@ -92,7 +93,7 @@ const actions = {
 			keywords = '',
 			title = ''
 		}}) {
-		const sanitisedKeywords = keywords ? removePunctuation(keywords) : '';
+		const sanitisedKeywords = keywords ? addSlashes(removeBrackets(keywords)) : '';
 		axios.get(WANTLIST[type], {
 			params: {
 				user: rootState.user.user,

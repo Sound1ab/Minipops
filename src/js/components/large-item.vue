@@ -30,6 +30,7 @@
 				></background-image>
 				<div class="large-item__copy-outer">
 					<h1 class="large-item__heading delta">{{title}}</h1>
+					<span class="large-item__time" v-if="secondaryTitle">{{secondaryTitle}}</span>
 					<span class="large-item__time" v-if="endTime">{{endTime}}</span>
 					<span class="large-item__bids" v-if="bids">bids {{bids}}</span>
 					<span class="large-item__postage" v-if="postage">postage £{{postage | removeCurrency}}</span>
@@ -57,6 +58,7 @@
 		},
 		props: {
 			title: VueTypes.string.def(''),
+			secondaryTitle: VueTypes.string.def(''),
 			price: VueTypes.string.def(''),
 			itemUrl: VueTypes.string.def(''),
 			imageUrl: VueTypes.string.def(''),

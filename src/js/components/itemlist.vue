@@ -6,6 +6,7 @@
 			:key="`${tab}-${element.title}-${index}`"
 			:data-index="index"
 			:title="element.title"
+			:secondary-title="element.secondaryTitle"
 			:price="element.price"
 			:item-url="element.itemUrl"
 			:image-url="element.imageUrl"
@@ -129,7 +130,8 @@
 		methods: {
 			...mapActions([
 				'WANTLIST_TRANSITION',
-				'SEARCH_TRANSITION'
+				'SEARCH_TRANSITION',
+				'UPDATE_TOGGLE_STATE'
 			]),
 			checkTitleAgainstWantlistTitle (str, bool = false) {
 				if (!this.wantlistTitles) {
@@ -151,9 +153,9 @@
 			pushArtistRoute (artist) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
 				this.$router.push({
-					name: `related-artists`,
+					name: `artist-releases`,
 					params: {
-						id: artistPath
+						artist: artistPath
 					}
 				});
 			},
@@ -187,6 +189,8 @@
 			},
 			handleView (index) {
 				if (this.$route.params.id === 'related-artists') {
+					this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
+					this.UPDATE_TOGGLE_STATE('artist-releases');
 					this.pushArtistRoute(this.items[index].title);
 					return;
 				}
