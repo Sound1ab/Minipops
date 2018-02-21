@@ -153,10 +153,7 @@
 			pushArtistRoute (artist) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
 				this.$router.push({
-					name: `artist-releases`,
-					params: {
-						artist: artistPath
-					}
+					path: `/artist-releases/${artistPath}`
 				});
 			},
 			handleAdd (index) {
@@ -188,9 +185,7 @@
 				});
 			},
 			handleView (index) {
-				if (this.$route.params.id === 'related-artists') {
-					this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
-					this.UPDATE_TOGGLE_STATE('artist-releases');
+				if (this.tab === 'related-artists') {
 					this.pushArtistRoute(this.items[index].title);
 					return;
 				}

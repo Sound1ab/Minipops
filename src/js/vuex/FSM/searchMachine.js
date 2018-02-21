@@ -10,6 +10,11 @@ export const searchMachine = Machine({
 		closed: {
 			on: {
 				SEARCH_SELECTED: 'searching',
+				UPDATE_SEARCH: {
+					closed: {
+						actions: ['UPDATE_SEARCH']
+					}
+				},
 				TEXT_INPUT: 'searching.typing'
 			}
 		},
@@ -34,6 +39,11 @@ export const searchMachine = Machine({
 				TIMER_COUNTDOWN_PASSED: {
 					searching: {
 						actions: ['DISPATCHING_SEARCH']
+					}
+				},
+				UPDATE_SEARCH: {
+					searching: {
+						actions: ['UPDATE_SEARCH']
 					}
 				}
 			}

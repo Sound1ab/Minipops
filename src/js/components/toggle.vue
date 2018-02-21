@@ -7,7 +7,7 @@
 				class="toggle__button-outer"
 			>
 				<toggle-button
-					:isActive="obj.path === currentTab"
+					:isActive="obj.match.includes(currentTab)"
 					:heading="obj.heading"
 					:path="obj.path"
 					:name="obj.name"
@@ -38,22 +38,22 @@
 					{
 						heading: 'eBay Current',
 						path: 'current',
-						name: 'items'
+						match: 'current'
 					},
 					{
 						heading: 'eBay Completed',
 						path: 'completed',
-						name: 'items'
+						match: 'completed'
 					},
 					{
 						heading: 'Discogs',
 						path: 'discogs',
-						name: 'items'
+						match: 'discogs'
 					},
 					{
 						heading: 'Related Artists',
 						path: 'related-artists',
-						name: 'items'
+						match: 'related-artists artist-releases'
 					}
 				];
 			}
@@ -63,19 +63,20 @@
 				'UPDATE_TOGGLE_STATE'
 			]),
 			handleToggleButton ({path}) {
-				this.UPDATE_TOGGLE_STATE(path);
+				this.$router.push({path: `/${path}`});
 			},
 			syncState (val) {
-				this.$router.push({name: 'items', params: {id: val}});
+				let path = val.split('/').filter(v => v)[0];
+				this.UPDATE_TOGGLE_STATE(path);
 			}
 		},
 		watch: {
-			'currentTab': function (val) {
+			'$route.path': function (val) {
 				this.syncState(val);
 			}
 		},
 		created () {
-			this.UPDATE_TOGGLE_STATE(this.$route.params.id);
+			this.syncState(this.$route.path);
 		}
 	};
 </script>

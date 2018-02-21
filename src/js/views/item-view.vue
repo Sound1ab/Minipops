@@ -9,7 +9,7 @@
 <script>
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	import Itemlist from '@/js/components/itemlist';
-	import {mapState} from 'vuex';
+	import {mapState, mapActions} from 'vuex';
 
 	export default {
 		name: 'item-view',
@@ -24,13 +24,21 @@
 			})
 		},
 		methods: {
+			...mapActions([
+				'SEARCH_TRANSITION'
+			]),
 			onLoad () {
-				const query = this.$store.state.search.query;
+				let query;
 				let routeEntering;
-				if (this.$route.params.artist) {
+				let path = this.$route.path;
+				if (path.includes('artist-releases')) {
+					let slugs = path.split('/').filter(v => v);
+					query = slugs[1].replace('-', ' ');
+					this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
 					routeEntering = 'artist-releases';
 				} else {
-					routeEntering = this.$route.params.id;
+					routeEntering = this.tab;
+					query = this.$store.state.search.query;
 				}
 				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
 				if (!query) {

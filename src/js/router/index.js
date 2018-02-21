@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import ItemView from '@/js/views/item-view';
-import ArtistView from '@/js/views/artist-view';
+// import ArtistView from '@/js/views/artist-view';
 
 Vue.use(Router);
 
@@ -14,14 +14,27 @@ export default new Router({
 	routes: [
 		{path: '/', redirect: '/current'},
 		{
-			path: '/artist-releases/:artist',
-			name: 'artist-releases',
+			path: '/current',
 			component: ItemView,
 			props: true
 		},
 		{
-			path: '/:id',
-			name: 'items',
+			path: '/completed',
+			component: ItemView,
+			props: true
+		},
+		{
+			path: '/discogs',
+			component: ItemView,
+			props: true
+		},
+		{
+			path: '/related-artists',
+			component: ItemView,
+			props: true
+		},
+		{
+			path: '/artist-releases/:artist',
 			component: ItemView,
 			props: true
 		}

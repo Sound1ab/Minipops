@@ -7,7 +7,7 @@
 				callback: observerCallback,
 				lastElement: true
 			}"
-			@click="handleView(index)"
+			@click="handleView"
 		>
 		<transition name="fade-up">
 			<div
@@ -18,8 +18,8 @@
 				<favourite
 					v-if="$route.params.id === 'discogs'"
 					:state="wantlistItem"
-					@add="handleAdd(index)"
-					@remove="handleRemove(index)"
+					@add="handleAdd"
+					@remove="handleRemove"
 				></favourite>
 				<star
 					v-if="primary">
@@ -87,14 +87,14 @@
 			}
 		},
 		methods: {
-			handleAdd (index) {
-				this.$emit('add', index);
+			handleAdd () {
+				this.$emit('add', this.index);
 			},
-			handleRemove (index) {
-				this.$emit('remove', index);
+			handleRemove () {
+				this.$emit('remove', this.index);
 			},
-			handleView (index) {
-				this.$emit('view', index);
+			handleView () {
+				this.$emit('view', this.index);
 			},
 			observerCallback () {
 				this.show = true;
