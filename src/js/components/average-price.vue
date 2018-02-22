@@ -1,7 +1,7 @@
 <template>
 	<transition name="fade-up" mode="out-in">
 		<div
-			v-if="averagePrice && tab === 'completed' && completedItems.length > 0"
+			v-if="averagePrice && tab !== 'related-artists' && tab !== 'artist-releases'"
 			class="average-price"
 		>
 			<tooltip
@@ -11,9 +11,7 @@
 				:size="'16px'"
 				:trianglePosition="'bottom'"
 			>
-				<span>Average price calculated from all completed listings.</span>
-				<br><br>
-				<span>Take it with a pinch of salt!</span>
+				<span>Average price</span>
 			</tooltip>
 			<div
 				class="average-price__inner"
@@ -26,7 +24,7 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex';
+	import {mapState, mapGetters} from 'vuex';
 	import SlideUpDown from '@/js/transitions/slide-up-down';
 	import Tooltip from '@/js/atomic/tooltip';
 	export default {
@@ -45,9 +43,9 @@
 				tab: state => state.toggle.state,
 				completedItems: state => state.fetch.completed.items
 			}),
-			averagePrice () {
-				return this.$store.getters.averagePrice(this.tab);
-			}
+			...mapGetters([
+				'averagePrice'
+			])
 		},
 		methods: {
 			handleClick () {
@@ -63,7 +61,7 @@
 		position: absolute;
 		bottom: 0;
 		right: 0;
-		z-index: 1;
+		z-index: 2;
 		margin: em(16);
 		&__tooltip {
 			position: absolute!important;

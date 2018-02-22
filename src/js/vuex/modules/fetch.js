@@ -5,6 +5,8 @@ import {ITEMS} from '@/js/vuex/api';
 import {addSlashes} from '@/js/helpers/add-slashes';
 import {normalizer} from '@/js/vuex/normalizer';
 import {filter, filterKeys} from '@/js/vuex/filter';
+import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
+import {toFixed} from '@/js/regex/to-fixed';
 
 const state = {
 	state: fetchMachine.initial,
@@ -39,6 +41,7 @@ const state = {
 const actions = {
 	FETCH_TRANSITION: transition.bind(null, fetchMachine),
 	CREATE_CANCEL_TOKEN ({commit, dispatch}, {params}) {
+		console.log('token params', params);
 		let CancelToken = axios.CancelToken;
 		let source = CancelToken.source();
 		commit('createCancelToken', source);
@@ -49,9 +52,10 @@ const actions = {
 			state.cancelToken.cancel();
 		}
 	},
-	FETCH_DATA ({commit, rootState, dispatch, state}, {params}) {
+	FETCH_DATA ({commit, rootState, dispatch, state}, {params: {query}}) {
+		console.log('params', query);
 		const currentTab = rootState.toggle.state;
-		const keywords = addSlashes(rootState.search.query);
+		const keywords = addSlashes(query);
 		console.log('keywords', keywords);
 		const user = rootState.user.user || '';
 		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
@@ -63,13 +67,11 @@ const actions = {
 				} else {
 					commit('updateItems', {type: currentTab, data: [], query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
-					throw new Error('no results returned');
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				commit('updateItems', {type: currentTab, data: [], query: keywords});
 				dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
-				throw new Error(err);
 			});
 	},
 	SORT ({commit}, payload) {
@@ -106,20 +108,25 @@ const getters = {
 			return filter[state.sort](state[tab].items);
 		}
 	},
-	averagePrice: state => (tab) => {
-		if (state[tab] && state[tab].items && state[tab].items.length > 1) {
-			const accumlatedCost = state[tab].items.reduce((acc, secondElement) => {
-				if (acc.price) {
-					acc = parseFloat(acc.price);
-				}
-				const secondPrice = parseFloat(secondElement.price);
-				const scaleUp = (acc * 100) + (secondPrice * 100);
-				const scaleDown = scaleUp / 100;
-				return scaleDown;
-			});
-			const average = ((accumlatedCost * 100) / state[tab].items.length) / 100;
-			return average.toFixed(2);
+	averagePrice: (state, getters, rootState) => {
+		const tab = rootState.toggle.state;
+		if (state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'related-artists') {
+			console.log(state[tab].items.length);
+			return;
 		}
+		const query = rootState.search.query.split(' ');
+		const regex = returnAllPhrasesContainingPhrase(query);
+		const items = state[tab].items.filter(el => {
+			return (el.title).search(regex) >= 0;
+		});
+		if (!query || !regex || items.length <= 0) {
+			return;
+		}
+		const accumlatedCost = items.reduce((acc, el) => {
+			return ((acc * 100) + (parseFloat(el.price) * 100)) / 100;
+		}, 0);
+		const average = ((accumlatedCost * 100) / items.length) / 100;
+		return toFixed(average, 2);
 	}
 };
 

@@ -2,7 +2,7 @@ import {Machine} from 'xstate';
 
 const id = 'Fetch';
 
-const conditionalCheck = function conditionalCheck ({query = '', routeEnteringQuery = ''}) {
+const conditionalCheck = function conditionalCheck (extState, {params: {query = '', routeEnteringQuery = ''}}) {
 	return (query && query.length > 0 && query !== routeEnteringQuery);
 };
 

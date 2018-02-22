@@ -32,7 +32,7 @@ const actions = {
 		const routeEnteringQuery = rootState.fetch[tab].query;
 		dispatch('FETCH_TRANSITION', {
 			type: 'FETCH_DATA_REQUEST',
-			extState: {
+			params: {
 				query,
 				routeEnteringQuery
 			}

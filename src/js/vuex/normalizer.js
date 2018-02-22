@@ -94,9 +94,10 @@ function refineRelatedArtists (artists) {
 function refineArtistReleases (artists) {
 	return artists.map(el => {
 		return {
-			title: el.artist,
-			secondaryTitle: el.title,
-			imageUrl: el.thumb
+			title: el.artists[0].name,
+			secondaryTitle: el.name,
+			imageUrl: el.images[0].url,
+			releaseDate: el.release_date
 		};
 	});
 }

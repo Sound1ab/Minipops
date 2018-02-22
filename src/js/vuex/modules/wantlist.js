@@ -7,6 +7,7 @@ import {refineWantlist, extractReleaseId, refineReleases} from '@/js/vuex/normal
 import {addSlashes} from '@/js/helpers/add-slashes';
 import {removeBrackets} from '@/js/helpers/remove-brackets';
 import {filterAlphabetically} from '@/js/vuex/filter';
+import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
 
 export function createPromises (api, releaseIds, user) {
 	return releaseIds.map(el => {
@@ -148,18 +149,12 @@ const mutations = {
 	}
 };
 
-function createRegex (words) {
-	return words.map(el => {
-		return `(?=.*\\b${el}\\b)`;
-	}).join('');
-}
-
 const getters = {
 	wantlistTitles: (state) => {
 		if (state.items.length > 0) {
 			return state.items.map(el => {
 				let words = el.title.split(' ');
-				return new RegExp(`^${createRegex(words)}.*$`, 'gi');
+				return returnAllPhrasesContainingPhrase(words);
 			});
 		}
 	}

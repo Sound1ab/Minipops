@@ -16,7 +16,7 @@
 				v-if="show"
 			>
 				<favourite
-					v-if="$route.params.id === 'discogs'"
+					v-if="tab === 'discogs'"
 					:state="wantlistItem"
 					@add="handleAdd"
 					@remove="handleRemove"
@@ -49,6 +49,7 @@
 	import BackgroundImage from '@/js/atomic/background-image';
 	import Favourite from '@/js/atomic/favourite';
 	import Star from '@/js/atomic/star';
+	import {mapState} from 'vuex';
 	export default {
 		name: 'large-item',
 		components: {
@@ -77,6 +78,11 @@
 			return {
 				show: false
 			};
+		},
+		computed: {
+			...mapState({
+				tab: state => state.toggle.state
+			})
 		},
 		filters: {
 			removeCurrency (val) {

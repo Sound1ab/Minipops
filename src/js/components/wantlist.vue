@@ -35,6 +35,7 @@
 		},
 		computed: {
 			...mapState({
+				tab: state => state.toggle.state,
 				items: state => state.wantlist.items,
 				subscribeId: state => state.watch.subscribeId,
 				watchers: state => state.watch.watchers,
@@ -83,6 +84,12 @@
 				'WANTLIST_TRANSITION',
 				'WATCH_TRANSITION'
 			]),
+			pushRelatedArtists (query) {
+				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
+				this.$router.push({
+					path: `/related-artists`
+				});
+			},
 			handleRemove (index) {
 				this.WANTLIST_TRANSITION({
 					type: 'REMOVE_FROM_WANTLIST',
@@ -94,6 +101,10 @@
 				});
 			},
 			handleClick (index) {
+				if (this.tab === 'artist-releases') {
+					this.pushRelatedArtists(this.items[index].title);
+					return;
+				}
 				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
 			},
 			handleWatch (index) {

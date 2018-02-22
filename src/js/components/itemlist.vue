@@ -17,7 +17,7 @@
 			:country="element.country"
 			:id="element.id"
 			:index="index"
-			:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"
+			:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true)"
 			:primary="element.primary"
 			@add="handleAdd"
 			@remove="handleRemove"
@@ -150,10 +150,20 @@
 				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
 				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
 			},
-			pushArtistRoute (artist) {
+			pushArtistRoute (artist, spotifyId) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
 				this.$router.push({
-					path: `/artist-releases/${artistPath}`
+					name: 'artist-releases',
+					params: {
+						artist: artistPath,
+						spotifyId
+					}
+				});
+			},
+			pushDiscogs (query) {
+				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
+				this.$router.push({
+					path: `/discogs`
 				});
 			},
 			handleAdd (index) {
@@ -186,7 +196,11 @@
 			},
 			handleView (index) {
 				if (this.tab === 'related-artists') {
-					this.pushArtistRoute(this.items[index].title);
+					this.pushArtistRoute(this.items[index].title, this.items[index].spotifyId);
+					return;
+				} else if (this.tab === 'artist-releases') {
+					const query = `${this.items[index].title} ${this.items[index].secondaryTitle}`;
+					this.pushDiscogs(query);
 					return;
 				}
 				let win = window.open(this.items[index].itemUrl, '_blank');

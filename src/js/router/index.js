@@ -36,6 +36,7 @@ export default new Router({
 		{
 			path: '/artist-releases/:artist',
 			component: ItemView,
+			name: 'artist-releases',
 			props: true
 		}
 	]

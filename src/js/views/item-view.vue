@@ -30,11 +30,10 @@
 			onLoad () {
 				let query;
 				let routeEntering;
-				let path = this.$route.path;
-				if (path.includes('artist-releases')) {
-					let slugs = path.split('/').filter(v => v);
-					query = slugs[1].replace('-', ' ');
-					this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
+				if (this.$route.params.artist && this.$route.params.spotifyId) {
+					const searchQuery = this.$route.params.artist.replace('-', ' ');
+					query = this.$route.params.spotifyId;
+					this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {searchQuery}});
 					routeEntering = 'artist-releases';
 				} else {
 					routeEntering = this.tab;
@@ -46,7 +45,7 @@
 				}
 				this.$store.dispatch('FETCH_TRANSITION', {
 					type: 'FETCH_DATA_REQUEST',
-					extState: {
+					params: {
 						query,
 						routeEnteringQuery
 					}
