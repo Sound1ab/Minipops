@@ -16,7 +16,7 @@
 				v-if="show"
 			>
 				<favourite
-					v-if="tab === 'discogs'"
+					v-if="tab === 'discogs' || tab === 'artist-releases'"
 					:state="wantlistItem"
 					@add="handleAdd"
 					@remove="handleRemove"

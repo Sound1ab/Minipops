@@ -17,7 +17,7 @@
 			:country="element.country"
 			:id="element.id"
 			:index="index"
-			:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true)"
+			:wantlist-item="checkTitleAgainstWantlistTitle(`${element.title} ${element.secondaryTitle ? element.secondaryTitle : ''}`, true)"
 			:primary="element.primary"
 			@add="handleAdd"
 			@remove="handleRemove"
@@ -65,7 +65,7 @@
 	import SwipeToReveal from '@/js/components/swipe-to-reveal';
 	import {mapState, mapActions, mapGetters} from 'vuex';
 	import {lowerCaseAndReplaceSpace} from '@/js/filters/lowerCaseAndReplaceSpace';
-	import {removePunctuation} from '@/js/filters/removePunctuation';
+	import {removePunctuation} from '@/js/regex/removePunctuation';
 	export default {
 		name: 'Itemlist',
 		components: {
@@ -133,13 +133,19 @@
 				'SEARCH_TRANSITION',
 				'UPDATE_TOGGLE_STATE'
 			]),
+			title (index) {
+				return `${this.items[index].title} ${this.items[index].secondaryTitle ? this.items[index].secondaryTitle : ''}`.trim();
+			},
 			checkTitleAgainstWantlistTitle (str, bool = false) {
 				if (!this.wantlistTitles) {
 					return false;
 				}
-				let test = this.wantlistTitles.filter(regex => {
-					return str.search(regex) >= 0;
+				const sanitisedStr = removePunctuation(str);
+				console.log('str', sanitisedStr);
+				const test = this.wantlistTitles.filter(regex => {
+					return sanitisedStr.search(regex) >= 0;
 				});
+				console.log('test', test);
 				if (bool) {
 					return test.length > 0;
 				} else {
@@ -148,7 +154,7 @@
 			},
 			search (index) {
 				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
-				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
+				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.title(index)}});
 			},
 			pushArtistRoute (artist, spotifyId) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
@@ -171,12 +177,12 @@
 					type: 'ADD_TO_WANTLIST',
 					params: {
 						type: 'addToWantlist',
-						keywords: this.items[index].title
+						keywords: this.title(index)
 					}
 				});
 			},
 			handleRemove (index) {
-				let title = this.items[index].title;
+				let title = this.title(index);
 				let releaseId;
 				const regex = this.checkTitleAgainstWantlistTitle(title);
 				this.wantlist.forEach(el => {
@@ -196,10 +202,10 @@
 			},
 			handleView (index) {
 				if (this.tab === 'related-artists') {
-					this.pushArtistRoute(this.items[index].title, this.items[index].spotifyId);
+					this.pushArtistRoute(this.title(index), this.items[index].spotifyId);
 					return;
 				} else if (this.tab === 'artist-releases') {
-					const query = `${this.items[index].title} ${this.items[index].secondaryTitle}`;
+					const query = this.title(index);
 					this.pushDiscogs(query);
 					return;
 				}

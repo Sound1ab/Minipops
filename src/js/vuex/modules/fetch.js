@@ -2,7 +2,7 @@ import axios from 'axios';
 import {fetchMachine} from '@/js/vuex/FSM/fetchMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {ITEMS} from '@/js/vuex/api';
-import {addSlashes} from '@/js/helpers/add-slashes';
+import {addSlashes} from '@/js/regex/add-slashes';
 import {normalizer} from '@/js/vuex/normalizer';
 import {filter, filterKeys} from '@/js/vuex/filter';
 import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
@@ -48,6 +48,7 @@ const actions = {
 		dispatch('FETCH_TRANSITION', {type: 'TOKEN_CREATED', params});
 	},
 	CANCEL_OUTGOING_REQUEST ({state}) {
+		console.log('cancelling requirest');
 		if (state.cancelToken) {
 			state.cancelToken.cancel();
 		}
@@ -69,9 +70,14 @@ const actions = {
 					dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
 				}
 			})
-			.catch(() => {
+			.catch((err) => {
+				console.log('err', err.message);
+				if (err.message === 'Request failed with status code 400') {
+					dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
+				} else {
+					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});
+				}
 				commit('updateItems', {type: currentTab, data: [], query: keywords});
-				dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
 			});
 	},
 	SORT ({commit}, payload) {

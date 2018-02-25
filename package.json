@@ -13,7 +13,9 @@
 		"test": "npm run unit",
 		"lint": "eslint --ext .js,.vue src test/unit/specs",
 		"build": "node build/build.js",
-		"fix": "eslint -c .eslintrc.js --fix . --ext .js,.vue src"
+		"fix": "eslint -c .eslintrc.js --fix . --ext .js,.vue src",
+		"deploy": "npm run build && aws s3 sync --acl public-read --profile sound1ab --delete dist/ s3://minipops.co.uk && npm run invalidate",
+		"invalidate": "aws cloudfront --profile sound1ab create-invalidation --distribution-id E172SLVW627N53 --paths '/*'"
 	},
 	"dependencies": {
 		"axios": "^0.17.1",
@@ -43,7 +45,8 @@
 		"vue-types": "^1.1.3",
 		"vuex": "^3.0.1",
 		"webpack-pwa-manifest": "^3.5.0",
-		"xstate": "^3.0.3"
+		"xstate": "^3.0.3",
+		"aws-amplify": "^0.2.0"
 	},
 	"devDependencies": {
 		"@vue/test-utils": "^1.0.0-beta.10",

@@ -13,7 +13,6 @@ const actions = {
 	SEARCH_TRANSITION: transition.bind(null, searchMachine),
 	START_TIMER ({dispatch}, transitionInfo) {
 		const {params: {query = '', disableFetch = false}} = transitionInfo;
-		dispatch('UPDATE_SEARCH', transitionInfo);
 		if (!query || disableFetch) {
 			dispatch('SEARCH_TRANSITION', {type: 'TEXT_INPUT_EMPTY'});
 			return;
@@ -23,8 +22,13 @@ const actions = {
 			dispatch('SEARCH_TRANSITION', {type: 'TIMER_COUNTDOWN_PASSED'});
 		}, 500);
 	},
-	UPDATE_SEARCH ({commit}, {params: {query}}) {
+	UPDATE_SEARCH ({commit}, transitionInfo) {
+		const {params: {query = ''}} = transitionInfo;
 		commit('updateSearch', query);
+	},
+	CHECKING_TAB ({dispatch}) {
+		console.log('checking tab');
+		dispatch('SEARCH_TRANSITION', {type: 'TAB_CHECKED'});
 	},
 	DISPATCHING_SEARCH ({dispatch, state, rootState}) {
 		const query = state.query;
@@ -37,6 +41,7 @@ const actions = {
 				routeEnteringQuery
 			}
 		});
+		dispatch('SEARCH_TRANSITION', {type: 'SEARCH_DISPATCHED'});
 	}
 };
 

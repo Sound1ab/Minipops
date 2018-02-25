@@ -27,7 +27,7 @@ export const searchMachine = Machine({
 					}
 				},
 				typing: {
-					onEntry: ['START_TIMER', 'CANCEL_OUTGOING_REQUEST'],
+					onEntry: ['START_TIMER', 'UPDATE_SEARCH', 'CANCEL_OUTGOING_REQUEST'],
 					on: {
 						TEXT_INPUT_EMPTY: 'searchReady',
 						TEXT_INPUT: 'typing'
@@ -36,16 +36,24 @@ export const searchMachine = Machine({
 			},
 			on: {
 				CLOSE: 'closed',
-				TIMER_COUNTDOWN_PASSED: {
-					searching: {
-						actions: ['DISPATCHING_SEARCH']
-					}
-				},
+				TIMER_COUNTDOWN_PASSED: 'checkingTab',
 				UPDATE_SEARCH: {
 					searching: {
 						actions: ['UPDATE_SEARCH']
 					}
 				}
+			}
+		},
+		checkingTab: {
+			onEntry: ['CHECKING_TAB'],
+			on: {
+				TAB_CHECKED: 'dispatchingSearch'
+			}
+		},
+		dispatchingSearch: {
+			onEntry: ['DISPATCHING_SEARCH'],
+			on: {
+				SEARCH_DISPATCHED: 'searching'
 			}
 		}
 	}

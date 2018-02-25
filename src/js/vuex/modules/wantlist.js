@@ -4,8 +4,9 @@ import {transition} from '@/js/vuex/fsm-transition';
 import {saveToLocalStorage, getFromLocalStorage, removeItemFromLocalStorage} from '@/js/helpers/localStorage';
 import {WANTLIST} from '@/js/vuex/api';
 import {refineWantlist, extractReleaseId, refineReleases} from '@/js/vuex/normalizer';
-import {addSlashes} from '@/js/helpers/add-slashes';
-import {removeBrackets} from '@/js/helpers/remove-brackets';
+import {addSlashes} from '@/js/regex/add-slashes';
+import {removeBrackets} from '@/js/regex/remove-brackets';
+import {removePunctuation} from '@/js/regex/removePunctuation';
 import {filterAlphabetically} from '@/js/vuex/filter';
 import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
 
@@ -65,8 +66,9 @@ const actions = {
 	FETCH_WANTLIST_DATA ({commit, dispatch, rootState}) {
 		axios.get(WANTLIST.wantlist, {params: {user: rootState.user.user}})
 			.then(res => {
-				const refinedWantlist = refineWantlist(res.data.wants);
+				const refinedWantlist = refineWantlist(res.data);
 				const filteredAlphabetically = filterAlphabetically(refinedWantlist);
+				console.log(refinedWantlist);
 				commit('updateWantlistItems', filteredAlphabetically);
 				dispatch('WANTLIST_TRANSITION', {type: 'SUCCESS'});
 			})
@@ -95,12 +97,12 @@ const actions = {
 			title = ''
 		}}) {
 		const sanitisedKeywords = keywords ? addSlashes(removeBrackets(keywords)) : '';
+		const encodedKeywords = encodeURIComponent(sanitisedKeywords);
 		axios.get(WANTLIST[type], {
 			params: {
 				user: rootState.user.user,
 				releaseId,
-				keywords:
-				sanitisedKeywords,
+				keywords: encodedKeywords,
 				title
 			}})
 			.then(() => {
@@ -153,7 +155,8 @@ const getters = {
 	wantlistTitles: (state) => {
 		if (state.items.length > 0) {
 			return state.items.map(el => {
-				let words = el.title.split(' ');
+				const sanitised = removePunctuation(el.title);
+				const words = sanitised.split(' ');
 				return returnAllPhrasesContainingPhrase(words);
 			});
 		}

@@ -1,13 +1,16 @@
 import {removeHttp} from '@/js/filters/remove-http';
 
 export function refineWantlist (data) {
-	return data.map(element => {
-		return {
-			title: `${element.basic_information.artists[0].name} ${element.basic_information.title}`,
-			id: element.basic_information.id,
-			imageUrl: element.basic_information.thumb
-		};
-	});
+	return data.reduce((acc, element) => {
+		if (element.basic_information.artists.length > 0) {
+			acc.push({
+				title: `${element.basic_information.artists[0].name} ${element.basic_information.title}`,
+				id: element.basic_information.id,
+				imageUrl: element.basic_information.thumb
+			});
+		}
+		return acc;
+	}, []);
 }
 
 export function refineReleases (data) {
@@ -94,8 +97,8 @@ function refineRelatedArtists (artists) {
 function refineArtistReleases (artists) {
 	return artists.map(el => {
 		return {
-			title: el.artists[0].name,
-			secondaryTitle: el.name,
+			title: `${el.artists[0].name}`,
+			secondaryTitle: `${el.name}`,
 			imageUrl: el.images[0].url,
 			releaseDate: el.release_date
 		};
