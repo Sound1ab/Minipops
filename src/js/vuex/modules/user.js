@@ -2,7 +2,8 @@ import axios from 'axios';
 import {userMachine} from '@/js/vuex/FSM/userMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {getFromLocalStorage, saveToLocalStorage} from '@/js/helpers/localStorage';
-import {USER} from '@/js/vuex/api';
+import {COGNITO} from '@/js/vuex/api';
+import Router from '@/js/router/index';
 
 const state = {
 	state: userMachine.initial,
@@ -14,25 +15,48 @@ const actions = {
 	CHECKING_FOR_USER ({dispatch}) {
 		const user = getFromLocalStorage('vcollect_userId');
 		if (user) {
-			dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user}});
+			dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path: '/current'}});
 		} else {
-			dispatch('USER_TRANSITION', {type: 'FAILURE'});
+			dispatch('USER_TRANSITION', {type: 'FAILURE', params: {path: '/login'}});
 		}
 	},
-	CREATE_USER ({dispatch}) {
-		axios.get(USER.addUser)
+	STORE_USER_IN_STATE ({commit}, {params: {user}}) {
+		saveToLocalStorage('vcollect_userId', user);
+		commit('storeUser', user);
+	},
+	UPDATE_ROUTE ({dispatch}, {params: {path}}) {
+		Router.push({path});
+	},
+	COGNITO_REQUEST ({dispatch}, {type, params: {emailAddress = '', username = '', password = '', verification = ''}}) {
+		let path;
+		if (type === 'LOGIN') {
+			path = '/current';
+		} else if (type === 'REGISTER_USER') {
+			path = '/login/verification';
+		} else if (type === 'VERIFY') {
+			path = '/login';
+		}
+		axios.post(COGNITO[type], {
+			emailAddress,
+			username,
+			password,
+			verification
+		})
 			.then(res => {
-				const user = res.data.user;
-				saveToLocalStorage('vcollect_userId', user);
-				dispatch('USER_TRANSITION', {type: 'SUCCESS'});
+				console.log(res);
+				if (res.data.code) {
+					console.log('err:', res.data.code);
+					dispatch('USER_TRANSITION', {type: 'FAILURE'});
+				}
+				if (type === 'LOGIN' && !res.data.user) {
+					dispatch('USER_TRANSITION', {type: 'FAILURE'});
+				}
+				const {user = ''} = res.data;
+				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path}});
 			})
 			.catch(() => {
 				dispatch('USER_TRANSITION', {type: 'FAILURE'});
 			});
-	},
-	STORE_USER ({commit, dispatch}, {params: {user}}) {
-		commit('storeUser', user);
-		dispatch('USER_TRANSITION', {type: 'USER_STORED'});
 	}
 };
 

@@ -15,22 +15,77 @@ export const userMachine = Machine({
 		checkingForUser: {
 			onEntry: ['CHECKING_FOR_USER'],
 			on: {
-				SUCCESS: 'storingUser',
-				FAILURE: 'creatingUser'
+				SUCCESS: 'successfullyLoggedIn',
+				FAILURE: 'waitingForLogin'
 			}
 		},
-		storingUser: {
-			onEntry: ['STORE_USER'],
+		waitingForLogin: {
+			onEntry: ['UPDATE_ROUTE'],
 			on: {
-				USER_STORED: 'idle'
+				LOGIN: 'loggingIn',
+				REGISTER_USER: 'waitingForRegistration'
 			}
 		},
-		creatingUser: {
-			onEntry: ['CREATE_USER'],
+		waitingForRegistration: {
+			onEntry: ['UPDATE_ROUTE'],
 			on: {
-				SUCCESS: 'checkingForUser',
-				FAILURE: 'idle'
+				LOGIN: 'waitingForLogin',
+				REGISTER_USER: 'registeringUser',
+				VERIFY: 'waitingForVerification'
 			}
+		},
+		waitingForVerification: {
+			onEntry: ['UPDATE_ROUTE'],
+			on: {
+				VERIFY: 'confirmingVerification',
+				LOGIN: 'waitingForLogin',
+				REGISTER_USER: 'waitingForRegistration'
+			}
+		},
+		loggingIn: {
+			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
+			on: {
+				SUCCESS: 'successfullyLoggedIn',
+				FAILURE: {
+					waitingForLogin: {
+						actions: ['SHOW_CONFIRMATION']
+					}
+				}
+			},
+			onExit: ['HIDE_LOADING']
+		},
+		registeringUser: {
+			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
+			on: {
+				SUCCESS: 'waitingForVerification',
+				FAILURE: {
+					waitingForRegistration: {
+						actions: ['SHOW_CONFIRMATION']
+					}
+				}
+			},
+			onExit: ['HIDE_LOADING']
+		},
+		confirmingVerification: {
+			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
+			on: {
+				SUCCESS: 'waitingForLogin',
+				FAILURE: {
+					waitingForVerification: {
+						actions: ['SHOW_CONFIRMATION']
+					}
+				}
+			},
+			onExit: ['HIDE_LOADING']
+		},
+		storingLogin: {
+			on: {
+				SUCCESS: 'loggingIn',
+				FAILURE: 'waitingForLogin'
+			}
+		},
+		successfullyLoggedIn: {
+			onEntry: ['UPDATE_ROUTE', 'STORE_USER_IN_STATE']
 		}
 	}
 });

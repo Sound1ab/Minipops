@@ -1,6 +1,6 @@
 <template>
-	<div class="nav-heading">
-		<h1 :class="['nav-heading__heading', className]" :style="{color}">{{text}}</h1>
+	<div class="nav-heading" :style="{color}">
+		<h1 :class="['nav-heading__heading', className]" >{{text}}</h1>
 	</div>
 </template>
 

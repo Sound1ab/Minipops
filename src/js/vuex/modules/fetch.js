@@ -116,8 +116,7 @@ const getters = {
 	},
 	averagePrice: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		if (state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'related-artists') {
-			console.log(state[tab].items.length);
+		if (!state[tab] || state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'related-artists') {
 			return;
 		}
 		const query = rootState.search.query.split(' ');

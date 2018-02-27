@@ -26,4 +26,10 @@ export const SUBSCRIBE = {
 	retrieveWatchers: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/retrieve-watchers'
 };
 
+export const COGNITO = {
+	LOGIN: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/authenticate-user',
+	REGISTER_USER: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/sign-up',
+	VERIFY: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/confirm-registration'
+};
+
 // https://w4jl7ji5wj.execute-api.us-east-1.amazonaws.com/prod
