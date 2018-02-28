@@ -16,8 +16,8 @@
 				v-if="show"
 			>
 				<favourite
-					v-if="tab === 'discogs' || tab === 'artist-releases'"
-					:state="wantlistItem"
+					v-if="tab === 'artist-releases'"
+					:state="wantlistIds.length > 0 && wantlistIds.includes(spotifyId)"
 					@add="handleAdd"
 					@remove="handleRemove"
 				></favourite>
@@ -49,7 +49,7 @@
 	import BackgroundImage from '@/js/atomic/background-image';
 	import Favourite from '@/js/atomic/favourite';
 	import Star from '@/js/atomic/star';
-	import {mapState} from 'vuex';
+	import {mapState, mapGetters} from 'vuex';
 	export default {
 		name: 'large-item',
 		components: {
@@ -66,11 +66,8 @@
 			endTime: VueTypes.string.def(''),
 			bids: VueTypes.string.def(''),
 			postage: VueTypes.string.def(''),
-			country: VueTypes.string.def(''),
-			location: VueTypes.string.def(''),
-			id: VueTypes.number.def(0),
+			spotifyId: VueTypes.string.def(''),
 			index: VueTypes.number.def(0),
-			wantlistItem: VueTypes.bool.def(false),
 			disable: VueTypes.bool.def(false),
 			primary: VueTypes.bool.def(false)
 		},
@@ -82,7 +79,10 @@
 		computed: {
 			...mapState({
 				tab: state => state.toggle.state
-			})
+			}),
+			...mapGetters([
+				'wantlistIds'
+			])
 		},
 		filters: {
 			removeCurrency (val) {
@@ -94,10 +94,20 @@
 		},
 		methods: {
 			handleAdd () {
-				this.$emit('add', this.index);
+				this.$emit('add', {
+					artist: this.title,
+					album: this.secondaryTitle,
+					spotifyId: this.spotifyId,
+					imageUrl: this.imageUrl
+				});
 			},
 			handleRemove () {
-				this.$emit('remove', this.index);
+				this.$emit('remove', {
+					artist: this.title,
+					album: this.secondaryTitle,
+					spotifyId: this.spotifyId,
+					imageUrl: this.imageUrl
+				});
 			},
 			handleView () {
 				this.$emit('view', this.index);

@@ -65,9 +65,9 @@
 		watch: {
 			user: function (val) {
 				if (typeof val === 'string') {
-//					this.SUBSCRIPTION_TRANSITION({type: 'LOADED'});
-//					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS'});
-//					this.WANTLIST_TRANSITION({type: 'LOADED'});
+					this.SUBSCRIPTION_TRANSITION({type: 'LOADED', params: {user: val}});
+					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS', params: {user: val}});
+					this.WANTLIST_TRANSITION({type: 'FETCH_WANTLIST', params: {user: val}});
 				}
 			},
 			open: function open (val) {

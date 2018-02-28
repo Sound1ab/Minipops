@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div v-if="$route.name === 'related-artists'" @click="handleBackClick" class="menu-button">
+		<div v-if="$route.name === 'discovery'" @click="handleBackClick" class="menu-button">
 			<svgicon
 				name="chevron-left"
 				:color="color"

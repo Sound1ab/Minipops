@@ -10,84 +10,42 @@ export const wantlistMachine = Machine({
 	states: {
 		idle: {
 			on: {
-				LOADED: {
-					checkingAuthentication: {
-						cond: () => {
-							return !getFromLocalStorage('vcollect_doesNotWantToAuthenticate');
-						}
-					},
-					unauthenticated: {
-						cond: () => {
-							return getFromLocalStorage('vcollect_doesNotWantToAuthenticate');
-						}
-					}
-				}
+				FETCH_WANTLIST: 'fetchingWantlist',
+				ADD_TO_WANTLIST: 'addingToWantlist',
+				DELETE_FROM_WANTLIST: 'deletingFromWantlist'
 			}
 		},
-		checkingAuthentication: {
-			onEntry: ['CHECK_AUTHENTICATION'],
-			on: {
-				SUCCESS: 'fetchingData',
-				FAILURE: 'showingAuthenticationMessage'
-			}
-		},
-		showingAuthenticationMessage: {
-			onEntry: ['SHOW_AUTHENTICATION_MESSAGE'],
-			on: {
-				AUTHENTICATE: 'redirecting',
-				DONT_AUTHENTICATE: 'unauthenticated'
-			},
-			onExit: ['HIDE_AUTHENTICATION_MESSAGE', 'SAVE_AUTHENTICATION_PREFERENCE']
-		},
-		unauthenticated: {
-			on: {
-				REAUTHENTICATE: 'showingAuthenticationMessage'
-			}
-		},
-		redirecting: {
-			onEntry: ['REDIRECT']
-		},
-		fetchingData: {
+		fetchingWantlist: {
 			onEntry: ['SHOW_LOADING', `FETCH_WANTLIST_DATA`],
 			on: {
-				SUCCESS: 'fulfilled',
-				FAILURE: 'rejected'
+				SUCCESS: 'idle',
+				FAILURE: 'idle'
 			},
 			onExit: 'HIDE_LOADING'
 		},
 		addingToWantlist: {
 			onEntry: ['SHOW_LOADING', 'UPDATE_WANTLIST_DATA'],
 			on: {
-				SUCCESS: 'fetchingData',
-				FAILURE: 'rejected'
+				SUCCESS: {
+					idle: {
+						actions: ['ADD_ITEM_TO_WANTLIST']
+					}
+				},
+				FAILURE: 'idle'
 			},
 			onExit: ['HIDE_LOADING', 'SHOW_CONFIRMATION']
 		},
-		removingFromWantlist: {
+		deletingFromWantlist: {
 			onEntry: ['SHOW_LOADING', 'UPDATE_WANTLIST_DATA'],
 			on: {
 				SUCCESS: {
-					fulfilled: {
+					idle: {
 						actions: ['REMOVE_ITEM_FROM_WANTLIST']
 					}
 				},
-				FAILURE: 'rejected'
+				FAILURE: 'idle'
 			},
 			onExit: ['HIDE_LOADING', 'SHOW_CONFIRMATION']
-		},
-		fulfilled: {
-			on: {
-				REQUEST: 'fetchingData',
-				ADD_TO_WANTLIST: 'addingToWantlist',
-				REMOVE_FROM_WANTLIST: 'removingFromWantlist'
-			}
-		},
-		rejected: {
-			on: {
-				REQUEST: 'fetchingData',
-				ADD_TO_WANTLIST: 'addingToWantlist',
-				REMOVE_FROM_WANTLIST: 'removingFromWantlist'
-			}
 		}
 	}
 });

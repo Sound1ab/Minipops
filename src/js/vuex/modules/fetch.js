@@ -27,7 +27,7 @@ const state = {
 		items: [],
 		query: ''
 	},
-	'related-artists': {
+	discovery: {
 		items: [],
 		query: ''
 	},
@@ -62,6 +62,7 @@ const actions = {
 		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {
 				if (res.data) {
+					console.log(res.data);
 					let data = normalizer[currentTab](res.data);
 					commit('updateItems', {type: currentTab, data, query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});
@@ -104,19 +105,19 @@ const mutations = {
 const getters = {
 	cleanItems: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		if (state[tab] && state[tab].items && state[tab].items.length > 1) {
+		if (state[tab] && state[tab].items && state[tab].items.length > 0) {
 			return state[tab].items;
 		}
 	},
 	sortItems: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		if (state[tab] && state[tab].items && state[tab].items.length > 1) {
+		if (state[tab] && state[tab].items && state[tab].items.length > 0) {
 			return filter[state.sort](state[tab].items);
 		}
 	},
 	averagePrice: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		if (!state[tab] || state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'related-artists') {
+		if (!state[tab] || state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'discovery') {
 			return;
 		}
 		const query = rootState.search.query.split(' ');

@@ -15,7 +15,7 @@ export const watchMachine = Machine({
 			}
 		},
 		addWatcher: {
-			onEntry: [`POST_EBAY_ID`, 'SHOW_LOADING'],
+			onEntry: [`SEND_SPOTIFY_ID`, 'SHOW_LOADING'],
 			on: {
 				SUCCESS: {
 					idle: {
@@ -27,7 +27,7 @@ export const watchMachine = Machine({
 			onExit: ['HIDE_LOADING', 'SHOW_CONFIRMATION']
 		},
 		removeWatcher: {
-			onEntry: [`POST_EBAY_ID`, 'SHOW_LOADING'],
+			onEntry: [`SEND_SPOTIFY_ID`, 'SHOW_LOADING'],
 			on: {
 				SUCCESS: {
 					idle: {

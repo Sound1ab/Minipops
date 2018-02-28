@@ -14,16 +14,16 @@ export const ITEMS = {
 	current: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/current-items',
 	completed: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/completed-items',
 	discogs: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/discogs-items',
-	'related-artists': 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/related-artists',
+	discovery: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/related-artists',
 	'artist-releases': 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/artist'
 };
 
 export const SUBSCRIBE = {
 	saveSubscription: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/save-subscription',
 	removeSubscription: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/remove-subscription',
-	watch: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/watch-item',
-	removeWatch: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/remove-watch',
-	retrieveWatchers: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/retrieve-watchers'
+	WATCH: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/watch-item',
+	REMOVE_WATCH: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/remove-watch',
+	RETRIEVE_WATCHERS: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/retrieve-watchers'
 };
 
 export const COGNITO = {

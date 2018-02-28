@@ -2,22 +2,22 @@
 	<ul class="wantlist__list">
 		<swipe-to-reveal
 			v-for="(element, index) in items"
-			:key="`${element.title}-${index}`"
+			:key="`${element.artist}-${index}`"
 			:configuration="swipeToRevealConfig"
 			:index="index"
 			:reset="wantlistConfirmation.state && wantlistConfirmation.value"
-			:button-state="watchers.includes(element.title) ? 'removeWatch' : 'watch'"
+			:button-state="watchers.length > 0 && watchers.includes(element.spotifyId) ? 'removeWatch' : 'watch'"
 			@remove="handleRemove"
 			@watch="handleWatch"
 			@removeWatch="handleRemoveWatcher"
 			@onClick="handleClick"
 		>
 			<wantlist-item
-				:title="element.title"
+				:artist="element.artist"
+				:album="element.album"
+				:spotify-id="element.spotifyId"
 				:image-url="element.imageUrl"
-				:id="element.id"
-				:extra-info="element.extraInfo"
-				:watching="watchers.includes(element.title)"
+				:watching="watchers.length > 0 && watchers.includes(element.spotifyId)"
 			></wantlist-item>
 		</swipe-to-reveal>
 	</ul>
@@ -37,7 +37,7 @@
 			...mapState({
 				tab: state => state.toggle.state,
 				items: state => state.wantlist.items,
-				subscribeId: state => state.watch.subscribeId,
+				user: state => state.user.user,
 				watchers: state => state.watch.watchers,
 				wantlistConfirmation: state => state.wantlist.confirmation
 			}),
@@ -84,42 +84,56 @@
 				'WANTLIST_TRANSITION',
 				'WATCH_TRANSITION'
 			]),
-			pushRelatedArtists (query) {
-				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
+			pushRelatedArtists () {
 				this.$router.push({
-					path: `/related-artists`
+					path: `/discovery`
 				});
 			},
 			handleRemove (index) {
+				const {artist, album, spotifyId, imageUrl} = this.items[index];
 				this.WANTLIST_TRANSITION({
-					type: 'REMOVE_FROM_WANTLIST',
+					type: 'DELETE_FROM_WANTLIST',
 					params: {
 						type: 'deleteFromWantlist',
-						releaseId: this.items[index].id,
-						title: this.items[index].title
+						user: this.user,
+						artist,
+						album,
+						spotifyId,
+						imageUrl
 					}
 				});
+				this.handleRemoveWatcher(index);
 			},
 			handleClick (index) {
+				const {artist, album} = this.items[index];
+				const query = `${artist} ${album}`;
 				if (this.tab === 'artist-releases') {
-					this.pushRelatedArtists(this.items[index].title);
+					this.pushRelatedArtists();
 					return;
 				}
-				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.items[index].title}});
+				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query}});
 			},
 			handleWatch (index) {
+				const {album, artist, spotifyId} = this.items[index];
+				const keywords = `${artist} ${album}`;
 				this.WATCH_TRANSITION({
 					type: 'WATCH',
 					params: {
-						title: this.items[index].title
+						user: this.user,
+						keywords,
+						spotifyId
 					}
 				});
 			},
 			handleRemoveWatcher (index) {
+				const {album, artist, spotifyId} = this.items[index];
+				const keywords = `${artist} ${album}`;
 				this.WATCH_TRANSITION({
 					type: 'REMOVE_WATCH',
 					params: {
-						title: this.items[index].title
+						user: this.user,
+						keywords,
+						spotifyId
 					}
 				});
 			}

@@ -3,9 +3,9 @@
 		class="wantlist-item"
 		:class="{'wantlist-item--watching': watching}"
 	>
-		<background-image class="wantlist-item__background-image" :image="imageUrl"></background-image>
+		<background-image :key="imageUrl" class="wantlist-item__background-image" :image="imageUrl"></background-image>
 		<div class="wantlist-item__copy-outer">
-			<h1 class="wantlist-item__title">{{title}}</h1>
+			<h1 class="wantlist-item__title">{{artist}} {{album}}</h1>
 		</div>
 		<div class="wantlist-item__drag">
 			<svgicon
@@ -29,10 +29,10 @@
 			BackgroundImage
 		},
 		props: {
-			title: VueTypes.string.def(''),
+			artist: VueTypes.string.def(''),
+			album: VueTypes.string.def(''),
+			spotifyId: VueTypes.string.def(''),
 			imageUrl: VueTypes.string.def(''),
-			id: VueTypes.number.def(0),
-			extraInfo: VueTypes.object.def({}),
 			watching: VueTypes.bool.def(false)
 		}
 	};

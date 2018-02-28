@@ -11,35 +11,26 @@ const state = {
 
 const actions = {
 	WATCH_TRANSITION: transition.bind(null, watchMachine),
-	POST_EBAY_ID ({commit, dispatch, rootState}, {type, params: {title}}) {
-		let API;
-		const user = rootState.user.user;
-		if (!user) {
-			dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
-		}
-		if (type === 'WATCH') {
-			API = SUBSCRIBE.watch;
-		} else {
-			API = SUBSCRIBE.removeWatch;
-		}
-		axios.post(API, {
-			title,
-			user
+	SEND_SPOTIFY_ID ({dispatch}, {type, params: {user, keywords, spotifyId}}) {
+		axios.post(SUBSCRIBE[type], {
+			user,
+			keywords,
+			spotifyId
 		})
 			.then(res => {
-				dispatch('WATCH_TRANSITION', {type: 'SUCCESS', params: {title}});
+				dispatch('WATCH_TRANSITION', {type: 'SUCCESS', params: {spotifyId}});
 			})
 			.catch(err => {
 				console.log(err);
 				dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
 			});
 	},
-	RETRIEVE_WATCHERS ({commit, dispatch, rootState}) {
-		const user = rootState.user.user;
+	RETRIEVE_WATCHERS ({commit, dispatch}, {type, params: {user}}) {
+		console.log('user', user);
 		if (!user) {
 			dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
 		}
-		axios.get(SUBSCRIBE.retrieveWatchers, {params: {user}})
+		axios.get(SUBSCRIBE[type], {params: {user}})
 			.then(res => {
 				const data = res.data;
 				if (Array.isArray(data)) {
@@ -53,18 +44,18 @@ const actions = {
 				dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
 			});
 	},
-	ADD_ITEM_TO_WATCHERS ({commit, state}, {params: {title}}) {
-		console.log('add to watchers', title);
+	ADD_ITEM_TO_WATCHERS ({commit, state}, {params: {spotifyId}}) {
+		console.log('add to watchers', spotifyId);
 		const {watchers} = state;
-		if (watchers.includes(title)) {
+		if (watchers.includes(spotifyId)) {
 			return;
 		}
-		commit('updateWatchers', [...watchers, title]);
+		commit('updateWatchers', [...watchers, spotifyId]);
 	},
-	REMOVE_ITEM_FROM_WATCHERS ({commit, state}, {params: {title}}) {
+	REMOVE_ITEM_FROM_WATCHERS ({commit, state}, {params: {spotifyId}}) {
 		const {watchers} = state;
 		const updatedWatchers = watchers.filter(el => {
-			return el !== title;
+			return el !== spotifyId;
 		});
 		commit('updateWatchers', updatedWatchers);
 	}

@@ -51,9 +51,9 @@
 						match: 'discogs'
 					},
 					{
-						heading: 'Related Artists',
-						path: 'related-artists',
-						match: 'related-artists artist-releases'
+						heading: 'Discovery',
+						path: 'discovery',
+						match: 'discovery artist-releases'
 					}
 				];
 			}

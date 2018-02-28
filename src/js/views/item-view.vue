@@ -39,10 +39,10 @@
 					routeEntering = this.tab;
 					query = this.$store.state.search.query;
 				}
-				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
 				if (!query) {
 					return;
 				}
+				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
 				this.$store.dispatch('FETCH_TRANSITION', {
 					type: 'FETCH_DATA_REQUEST',
 					params: {

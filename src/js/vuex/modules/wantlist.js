@@ -22,7 +22,7 @@ export function createPromises (api, releaseIds, user) {
 const state = {
 	state: wantlistMachine.initial,
 	userId: '',
-	items: {},
+	items: [],
 	authPref: !!getFromLocalStorage('vcollect_doesNotWantToAuthenticate'),
 	confirmation: {
 		state: false,
@@ -32,43 +32,11 @@ const state = {
 
 const actions = {
 	WANTLIST_TRANSITION: transition.bind(null, wantlistMachine),
-	CHECK_AUTHENTICATION ({dispatch, rootState}) {
-		axios.post(WANTLIST.accessData, {user: rootState.user.user})
+	FETCH_WANTLIST_DATA ({commit, dispatch}, {params: {user}}) {
+		axios.post(WANTLIST.wantlist, {user})
 			.then(res => {
 				const data = res.data;
-				if (data) {
-					dispatch('WANTLIST_TRANSITION', {type: 'SUCCESS'});
-				} else {
-					dispatch('WANTLIST_TRANSITION', {type: 'FAILURE'});
-				}
-			})
-			.catch(err => {
-				console.log(err);
-				dispatch('WANTLIST_TRANSITION', {type: 'FAILURE'});
-			});
-	},
-	SAVE_AUTHENTICATION_PREFERENCE ({commit, dispatch}, {params: {preference}}) {
-		if (preference) {
-			removeItemFromLocalStorage('vcollect_doesNotWantToAuthenticate');
-			commit('updateAuthPref', false);
-		} else {
-			saveToLocalStorage('vcollect_doesNotWantToAuthenticate', true);
-			commit('updateAuthPref', true);
-		}
-	},
-	REDIRECT ({rootState}) {
-		const user = rootState.user.user;
-		window.location.replace(`https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/authorize?user=${user}`);
-	},
-	UPDATE_USER_ID ({commit, dispatch}, payload) {
-		commit('updateUserId', payload);
-	},
-	FETCH_WANTLIST_DATA ({commit, dispatch, rootState}) {
-		axios.get(WANTLIST.wantlist, {params: {user: rootState.user.user}})
-			.then(res => {
-				const refinedWantlist = refineWantlist(res.data);
-				const filteredAlphabetically = filterAlphabetically(refinedWantlist);
-				console.log(refinedWantlist);
+				const filteredAlphabetically = filterAlphabetically(data);
 				commit('updateWantlistItems', filteredAlphabetically);
 				dispatch('WANTLIST_TRANSITION', {type: 'SUCCESS'});
 			})
@@ -76,54 +44,38 @@ const actions = {
 				dispatch('WANTLIST_TRANSITION', {type: 'FAILURE'});
 			});
 	},
-	FETCH_RELEASE_DATA ({commit, dispatch, state, rootState}) {
-		const releaseIds = extractReleaseId(state.items);
-		const promises = createPromises(WANTLIST.releases, releaseIds, rootState.user.user);
-		axios.all(promises)
-			.then(res => {
-				const refinedReleases = refineReleases(res);
-				commit('updateWantlistItems', refinedReleases);
-				dispatch('WANTLIST_TRANSITION', {type: 'SUCCESS_RELEASES'});
-			})
-			.catch(() => {
-				dispatch('WANTLIST_TRANSITION', {type: 'FAILURE_RELEASES'});
-			});
-	},
-	UPDATE_WANTLIST_DATA ({rootState, dispatch}, {
+	UPDATE_WANTLIST_DATA ({dispatch}, {
 		params: {
 			type,
-			releaseId = '',
-			keywords = '',
-			title = ''
+			user = '',
+			artist = '',
+			album = '',
+			spotifyId = '',
+			imageUrl = ''
 		}}) {
-		const sanitisedKeywords = keywords ? addSlashes(removeBrackets(keywords)) : '';
-		const encodedKeywords = encodeURIComponent(sanitisedKeywords);
-		axios.get(WANTLIST[type], {
-			params: {
-				user: rootState.user.user,
-				releaseId,
-				keywords: encodedKeywords,
-				title
-			}})
+		artist = artist ? addSlashes(artist) : '';
+		album = artist ? addSlashes(album) : '';
+		axios.post(WANTLIST[type], {user, artist, album, spotifyId, imageUrl})
 			.then(() => {
 				dispatch('WANTLIST_TRANSITION', {
 					type: 'SUCCESS',
-					params: {
-						type,
-						releaseId,
-						keywords
-					}
+					params: {user, artist, album, spotifyId, imageUrl}
 				});
 			})
 			.catch(() => {
 				dispatch('WANTLIST_TRANSITION', {type: 'FAILURE'});
 			});
 	},
-	REMOVE_ITEM_FROM_WANTLIST ({commit, dispatch, state}, {params: {releaseId}}) {
+	REMOVE_ITEM_FROM_WANTLIST ({commit, state}, {params: {spotifyId}}) {
 		const updatedWantlist = state.items.filter(item => {
-			return item.id !== releaseId;
+			return item.spotifyId !== spotifyId;
 		});
 		commit('updateWantlistItems', updatedWantlist);
+	},
+	ADD_ITEM_TO_WANTLIST ({commit, state}, {params: {artist, album, spotifyId, imageUrl}}) {
+		const wantlist = [...state.items, {artist, album, spotifyId, imageUrl}];
+		const filteredAlphabetically = filterAlphabetically(wantlist);
+		commit('updateWantlistItems', filteredAlphabetically);
 	},
 	SHOW_CONFIRMATION ({commit}, payload) {
 		commit('showConfirmation', {state: true, value: payload.type === 'SUCCESS'});
@@ -153,13 +105,19 @@ const mutations = {
 
 const getters = {
 	wantlistTitles: (state) => {
-		if (state.items.length > 0) {
-			return state.items.map(el => {
-				const sanitised = removePunctuation(el.title);
-				const words = sanitised.split(' ');
-				return returnAllPhrasesContainingPhrase(words);
-			});
+		// if (state.items.length > 0) {
+		// 	return state.items.map(el => {
+		// 		const sanitised = removePunctuation(el.title);
+		// 		const words = sanitised.split(' ');
+		// 		return returnAllPhrasesContainingPhrase(words);
+		// 	});
+		// }
+	},
+	wantlistIds: (state) => {
+		if (state.items.length <= 0) {
+			return state.items;
 		}
+		return state.items.map(el => el.spotifyId);
 	}
 };
 

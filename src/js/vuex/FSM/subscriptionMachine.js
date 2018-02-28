@@ -13,7 +13,7 @@ export const subscriptionMachine = Machine({
 			}
 		},
 		checkingForServiceWorker: {
-			onEntry: ['CHECKING_FOR_SERVICE'],
+			onEntry: ['CHECKING_FOR_SERVICE_WORKER'],
 			on: {
 				SUCCESS: 'checkingForNotification',
 				FAILURE: 'idle'

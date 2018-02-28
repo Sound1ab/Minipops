@@ -1,7 +1,7 @@
 <template>
 	<transition name="fade-up" mode="out-in">
 		<div
-			v-if="averagePrice && tab !== 'related-artists' && tab !== 'artist-releases'"
+			v-if="averagePrice && tab !== 'discovery' && tab !== 'artist-releases'"
 			class="average-price"
 		>
 			<tooltip

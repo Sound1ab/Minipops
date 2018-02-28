@@ -1,6 +1,5 @@
 <template>
 	<ul class="itemlist">
-		<!--v-if="items.length > 0 && index <= dripFeed"-->
 		<large-item
 			v-for="(element, index) in items"
 			:key="`${tab}-${element.title}-${index}`"
@@ -13,49 +12,14 @@
 			:end-time="element.endTime"
 			:bids="element.bids"
 			:postage="element.postage"
-			:location="element.location"
 			:country="element.country"
-			:id="element.id"
+			:spotify-id="element.spotifyId"
 			:index="index"
-			:wantlist-item="checkTitleAgainstWantlistTitle(`${element.title} ${element.secondaryTitle ? element.secondaryTitle : ''}`, true)"
 			:primary="element.primary"
 			@add="handleAdd"
 			@remove="handleRemove"
 			@view="handleView"
 		></large-item>
-		<!--<swipe-to-reveal-->
-			<!--v-infinite-scroll="{-->
-				<!--root: 'scrolling-container',-->
-				<!--callback: observerCallback,-->
-				<!--lastElement: index === dripFeed-->
-			<!--}"-->
-			<!--v-for="(element, index) in items"-->
-			<!--:key="`${tab}-${element.title}-${index}`"-->
-			<!--:configuration="swipeToRevealConfig"-->
-			<!--:index="index"-->
-			<!--:data-index="index"-->
-			<!--:reset="wantlistConfirmation.state && wantlistConfirmation.value"-->
-			<!--:button-state="checkTitleAgainstWantlistTitle(element.title, true) ? 'remove' : 'add'"-->
-			<!--:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"-->
-			<!--@add="handleAdd"-->
-			<!--@remove="handleRemove"-->
-			<!--@onClick="handleView"-->
-		<!--&gt;-->
-			<!--<item-->
-				<!--:title="element.title"-->
-				<!--:price="element.price"-->
-				<!--:item-url="element.itemUrl"-->
-				<!--:image-url="element.imageUrl"-->
-				<!--:end-time="element.endTime"-->
-				<!--:bids="element.bids"-->
-				<!--:postage="element.postage"-->
-				<!--:location="element.location"-->
-				<!--:country="element.country"-->
-				<!--:id="element.id"-->
-				<!--:wantlist-item="checkTitleAgainstWantlistTitle(element.title, true) && $route.params.id === 'discogs'"-->
-				<!--:disable="$route.params.id !== 'discogs' || wantlistState === 'unauthenticated'"-->
-			<!--&gt;</item>-->
-		<!--</swipe-to-reveal>-->
 	</ul>
 </template>
 
@@ -80,11 +44,9 @@
 		},
 		computed: {
 			...mapState({
+				user: state => state.user.user,
 				tab: state => state.toggle.state,
-				query: state => state.search.query,
-				wantlistConfirmation: state => state.wantlist.confirmation,
-				wantlist: state => state.wantlist.items,
-				wantlistState: state => state.wantlist.state
+				query: state => state.search.query
 			}),
 			...mapGetters([
 				'wantlistTitles',
@@ -136,25 +98,47 @@
 			title (index) {
 				return `${this.items[index].title} ${this.items[index].secondaryTitle ? this.items[index].secondaryTitle : ''}`.trim();
 			},
-			checkTitleAgainstWantlistTitle (str, bool = false) {
-				if (!this.wantlistTitles) {
-					return false;
-				}
-				const sanitisedStr = removePunctuation(str);
-				console.log('str', sanitisedStr);
-				const test = this.wantlistTitles.filter(regex => {
-					return sanitisedStr.search(regex) >= 0;
-				});
-				console.log('test', test);
-				if (bool) {
-					return test.length > 0;
-				} else {
-					return test[0];
-				}
-			},
 			search (index) {
 				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
 				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.title(index)}});
+			},
+			handleAdd ({artist, album, spotifyId, imageUrl}) {
+				this.WANTLIST_TRANSITION({
+					type: 'ADD_TO_WANTLIST',
+					params: {
+						type: 'addToWantlist',
+						user: this.user,
+						artist,
+						album,
+						spotifyId,
+						imageUrl
+					}
+				});
+			},
+			handleRemove ({artist, album, spotifyId, imageUrl}) {
+				this.WANTLIST_TRANSITION({
+					type: 'DELETE_FROM_WANTLIST',
+					params: {
+						type: 'deleteFromWantlist',
+						user: this.user,
+						artist,
+						album,
+						spotifyId,
+						imageUrl
+					}
+				});
+			},
+			handleView (index) {
+				if (this.tab === 'discovery') {
+					this.pushArtistRoute(this.title(index), this.items[index].spotifyId);
+					return;
+				} else if (this.tab === 'artist-releases') {
+					const query = this.title(index);
+					this.pushDiscogs(query);
+					return;
+				}
+				let win = window.open(this.items[index].itemUrl, '_blank');
+				win.focus();
 			},
 			pushArtistRoute (artist, spotifyId) {
 				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
@@ -171,54 +155,6 @@
 				this.$router.push({
 					path: `/discogs`
 				});
-			},
-			handleAdd (index) {
-				this.WANTLIST_TRANSITION({
-					type: 'ADD_TO_WANTLIST',
-					params: {
-						type: 'addToWantlist',
-						keywords: this.title(index)
-					}
-				});
-			},
-			handleRemove (index) {
-				let title = this.title(index);
-				let releaseId;
-				const regex = this.checkTitleAgainstWantlistTitle(title);
-				this.wantlist.forEach(el => {
-					if (el.title.search(regex) >= 0) {
-						title = el.title;
-						releaseId = el.id;
-					}
-				});
-				this.WANTLIST_TRANSITION({
-					type: 'REMOVE_FROM_WANTLIST',
-					params: {
-						type: 'deleteFromWantlist',
-						releaseId,
-						title
-					}
-				});
-			},
-			handleView (index) {
-				if (this.tab === 'related-artists') {
-					this.pushArtistRoute(this.title(index), this.items[index].spotifyId);
-					return;
-				} else if (this.tab === 'artist-releases') {
-					const query = this.title(index);
-					this.pushDiscogs(query);
-					return;
-				}
-				let win = window.open(this.items[index].itemUrl, '_blank');
-				win.focus();
-			},
-			observerCallback () {
-				this.dripFeed = this.dripFeed + 10;
-			}
-		},
-		watch: {
-			query () {
-				this.dripFeed = 10;
 			}
 		}
 	};

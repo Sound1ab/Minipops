@@ -45,7 +45,7 @@ export default new Router({
 			props: true
 		},
 		{
-			path: '/related-artists',
+			path: '/discovery',
 			component: ItemView,
 			props: true
 		},

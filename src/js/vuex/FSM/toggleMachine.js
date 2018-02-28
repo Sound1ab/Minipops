@@ -12,7 +12,7 @@ export const toggleMachine = Machine({
 				current: {},
 				completed: {},
 				discogs: {},
-				'related-artists': {}
+				discovery: {}
 			},
 			on: {
 				CLICK: {
@@ -33,7 +33,7 @@ export const toggleMachine = Machine({
 					},
 					'buttonSelected.related-artists': {
 						cond: (extState, extObj) => {
-							return extObj.params.path === 'related-artists';
+							return extObj.params.path === 'discovery';
 						}
 					}
 				}

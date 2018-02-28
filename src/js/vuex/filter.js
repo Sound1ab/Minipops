@@ -13,4 +13,4 @@ export const filter = {
 	'End Late': (data) => orderBy(data, (item) => new Date(item.endTimeUnmodified).getTime(), ['desc'])
 };
 
-export const filterAlphabetically = (data) => orderBy(data, (item) => item.title.toLowerCase(), ['asc']);
+export const filterAlphabetically = (data) => orderBy(data, (item) => `${item.artist} ${item.album}`, ['asc']);
