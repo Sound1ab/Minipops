@@ -1,42 +1,32 @@
 <template>
 	<div class="login-box">
 		<transition name="fade-up" mode="out-in">
-			<login-form
-				v-if="$route.path === '/login'"
-				:key="'login'"
-				:username="username"
-				:password="password"
-				@handleNavigate="handleNavigate"
-				@updateInput="handleUpdate"
-				@submit="handleNext"
-			></login-form>
-			<register-form
-				v-else-if="$route.path === '/login/registration'"
-				:key="'register'"
+			<render-form
+				v-for="(schema, key, index) in loginSchema"
+				v-if="$route.path === schema.route"
+				:key="key"
+				:schema="schema.build"
 				:username="username"
 				:email-address="emailAddress"
 				:password="password"
-				@handleNavigate="handleNavigate"
-				@updateInput="handleUpdate"
-				@submit="handleNext"
-			></register-form>
-			<verification-form
-				v-if="$route.path === '/login/verification'"
 				:verification="verification"
-				@handleNavigate="handleNavigate"
+				:remember-me="rememberMe"
 				@updateInput="handleUpdate"
 				@submit="handleNext"
-			></verification-form>
+			></render-form>
 		</transition>
 		<next @next="handleNext"></next>
 	</div>
 </template>
 
 <script>
+	import {loginSchema} from '@/js/schema/login';
 	import VueTypes from 'vue-types';
 	import VerificationForm from '@/js/atomic/login/verification-form';
+	import RenderForm from '@/js/atomic/login/render-form';
 	import LoginForm from '@/js/atomic/login/login-form';
 	import RegisterForm from '@/js/atomic/login/register-form';
+	import ForgotPasswordResetForm from '@/js/atomic/login/forgot-password-reset-form';
 	import Next from '@/js/atomic/login/next';
 	import {mapActions, mapState} from 'vuex';
 	export default {
@@ -48,14 +38,18 @@
 			VerificationForm,
 			LoginForm,
 			RegisterForm,
-			Next
+			ForgotPasswordResetForm,
+			Next,
+			RenderForm
 		},
 		data () {
 			return {
+				loginSchema,
 				username: '',
 				emailAddress: '',
 				password: '',
-				verification: ''
+				verification: '',
+				rememberMe: false
 			};
 		},
 		computed: {
@@ -67,57 +61,22 @@
 			...mapActions([
 				'USER_TRANSITION'
 			]),
-			loginUser (path) {
-				this.USER_TRANSITION({
-					type: 'LOGIN',
-					params: {
-						path,
-						username: this.username,
-						password: this.password
-					}
-				});
-			},
-			registerUser (path) {
-				this.USER_TRANSITION({
-					type: 'REGISTER_USER',
-					params: {
-						path,
-						username: this.username,
-						emailAddress: this.emailAddress,
-						password: this.password
-					}
-				});
-			},
-			verifyUser (path) {
-				this.USER_TRANSITION({
-					type: 'VERIFY',
-					params: {
-						path,
-						username: this.username,
-						verification: this.verification
-					}
-				});
-			},
 			handleUpdate ({dataKey, value}) {
 				this[dataKey] = value;
 			},
-			handleNavigate (path) {
-				if (path === '/login') {
-					this.loginUser(path);
-				} else if (path === '/login/registration') {
-					this.registerUser(path);
-				} else if (path === '/login/verification') {
-					this.verifyUser(path);
-				}
-			},
 			handleNext () {
-				if (this.state === 'waitingForLogin') {
-					this.loginUser();
-				} else if (this.state === 'waitingForRegistration') {
-					this.registerUser();
-				} else if (this.state === 'waitingForVerification') {
-					this.verifyUser();
-				}
+				const next = this.loginSchema[this.state].next;
+				this.USER_TRANSITION({
+					type: next.action,
+					params: {
+						path: next.completionPath,
+						username: this.username,
+						emailAddress: this.emailAddress,
+						password: this.password,
+						verification: this.verification,
+						rememberMe: this.rememberMe
+					}
+				});
 			}
 		}
 	};
@@ -130,8 +89,7 @@
 		box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
 		width: 80%;
 		max-width: em(320);
-		height: 80%;
-		max-height: em(400);
+		min-height: em(424);
 		border-radius: 5px;
 		display: flex;
 		flex-direction: column;

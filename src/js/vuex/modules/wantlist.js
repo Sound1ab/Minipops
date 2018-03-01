@@ -1,14 +1,9 @@
 import axios from 'axios';
 import {wantlistMachine} from '@/js/vuex/FSM/wantlistMachine';
 import {transition} from '@/js/vuex/fsm-transition';
-import {saveToLocalStorage, getFromLocalStorage, removeItemFromLocalStorage} from '@/js/helpers/localStorage';
 import {WANTLIST} from '@/js/vuex/api';
-import {refineWantlist, extractReleaseId, refineReleases} from '@/js/vuex/normalizer';
 import {addSlashes} from '@/js/regex/add-slashes';
-import {removeBrackets} from '@/js/regex/remove-brackets';
-import {removePunctuation} from '@/js/regex/removePunctuation';
 import {filterAlphabetically} from '@/js/vuex/filter';
-import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
 
 export function createPromises (api, releaseIds, user) {
 	return releaseIds.map(el => {
@@ -22,12 +17,7 @@ export function createPromises (api, releaseIds, user) {
 const state = {
 	state: wantlistMachine.initial,
 	userId: '',
-	items: [],
-	authPref: !!getFromLocalStorage('vcollect_doesNotWantToAuthenticate'),
-	confirmation: {
-		state: false,
-		value: ''
-	}
+	items: []
 };
 
 const actions = {
@@ -76,12 +66,6 @@ const actions = {
 		const wantlist = [...state.items, {artist, album, spotifyId, imageUrl}];
 		const filteredAlphabetically = filterAlphabetically(wantlist);
 		commit('updateWantlistItems', filteredAlphabetically);
-	},
-	SHOW_CONFIRMATION ({commit}, payload) {
-		commit('showConfirmation', {state: true, value: payload.type === 'SUCCESS'});
-		setTimeout(() => {
-			commit('showConfirmation', {state: false, value: ''});
-		}, 1000);
 	}
 };
 
@@ -94,9 +78,6 @@ const mutations = {
 	},
 	updateWantlistItems (state, data) {
 		state.items = data;
-	},
-	showConfirmation (state, payload) {
-		state.confirmation = payload;
 	},
 	updateAuthPref (state, payload) {
 		state.authPref = payload;

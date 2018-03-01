@@ -27,22 +27,28 @@
 			...mapActions([
 				'SEARCH_TRANSITION'
 			]),
-			onLoad () {
-				let query;
-				let routeEntering;
-				if (this.$route.params.artist && this.$route.params.spotifyId) {
-					const searchQuery = this.$route.params.artist.replace('-', ' ');
-					query = this.$route.params.spotifyId;
-					this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {searchQuery}});
-					routeEntering = 'artist-releases';
-				} else {
-					routeEntering = this.tab;
-					query = this.$store.state.search.query;
-				}
+			replaceHyphensWithSpaces (str) {
+				return str.replace('-', ' ');
+			},
+			retrieveRouteEnteringQuery (routeEntering) {
+				console.log(routeEntering);
+				return this.$store.state.fetch[routeEntering].query;
+			},
+			handleArtistReleasesRoute (artist, spotifyId) {
+				const searchQuery = this.replaceHyphensWithSpaces(artist);
+				const query = spotifyId;
+				const routeEnteringQuery = this.retrieveRouteEnteringQuery('artist-releases');
+				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query: searchQuery}});
+				this.dispatchTransition(query, routeEnteringQuery);
+			},
+			handleAllOtherRoutes (query, tab) {
+				const routeEnteringQuery = this.retrieveRouteEnteringQuery(tab);
+				this.dispatchTransition(query, routeEnteringQuery);
+			},
+			dispatchTransition (query, routeEnteringQuery) {
 				if (!query) {
 					return;
 				}
-				const routeEnteringQuery = this.$store.state.fetch[routeEntering].query;
 				this.$store.dispatch('FETCH_TRANSITION', {
 					type: 'FETCH_DATA_REQUEST',
 					params: {
@@ -50,6 +56,20 @@
 						routeEnteringQuery
 					}
 				});
+			},
+			onLoad () {
+				const query = this.$store.state.search.query;
+				const artist = this.$route.params.artist;
+				const spotifyId = this.$route.params.spotifyId;
+				const tab = this.tab;
+				if (tab === 'login') {
+					return;
+				}
+				if (artist && spotifyId) {
+					this.handleArtistReleasesRoute(artist, spotifyId);
+				} else {
+					this.handleAllOtherRoutes(query, tab);
+				}
 			}
 		},
 		watch: {

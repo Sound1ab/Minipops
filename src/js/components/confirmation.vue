@@ -1,6 +1,6 @@
 <template>
-		<transition name="fade-up" mode="out-in" >
-	<div class="action-confirmation" v-if="confirmation.state">
+	<transition name="fade-up" mode="out-in" >
+		<div class="action-confirmation" v-if="confirmation.state">
 			<div class="action-confirmation__inner" >
 				<svgicon
 					v-if="confirmation.value"
@@ -19,19 +19,29 @@
 				>
 				</svgicon>
 			</div>
-	</div>
-		</transition>
+			<tooltip
+				v-if="confirmation.message"
+				:size="'16px'"
+			>
+				<span>{{confirmation.message}}</span>
+			</tooltip>
+		</div>
+	</transition>
 </template>
 
 <script>
 	import '@/assets/compiled-icons/check';
 	import '@/assets/compiled-icons/close';
+	import Tooltip from '@/js/atomic/tooltip';
 	import {mapState} from 'vuex';
 	export default {
 		name: 'action-confirmation',
+		components: {
+			Tooltip
+		},
 		computed: {
 			...mapState({
-				confirmation: state => state.wantlist.confirmation
+				confirmation: state => state.ui.confirmation
 			})
 		}
 	};
@@ -46,6 +56,7 @@
 		width: 100%;
 		height: 100%;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		pointer-events: none;

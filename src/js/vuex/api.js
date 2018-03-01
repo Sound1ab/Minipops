@@ -29,7 +29,9 @@ export const SUBSCRIBE = {
 export const COGNITO = {
 	LOGIN: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/authenticate-user',
 	REGISTER_USER: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/sign-up',
-	VERIFY: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/confirm-registration'
+	VERIFY_USER: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/confirm-registration',
+	RESET: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/forgot-password-reset',
+	VERIFY_RESET: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/forgot-password-verify'
 };
 
 // https://w4jl7ji5wj.execute-api.us-east-1.amazonaws.com/prod

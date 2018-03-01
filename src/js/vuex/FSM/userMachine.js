@@ -23,7 +23,8 @@ export const userMachine = Machine({
 			onEntry: ['UPDATE_ROUTE'],
 			on: {
 				LOGIN: 'loggingIn',
-				REGISTER_USER: 'waitingForRegistration'
+				REGISTER_USER: 'waitingForRegistration',
+				FORGOT_PASSWORD: 'waitingForPasswordReset'
 			}
 		},
 		waitingForRegistration: {
@@ -31,21 +32,39 @@ export const userMachine = Machine({
 			on: {
 				LOGIN: 'waitingForLogin',
 				REGISTER_USER: 'registeringUser',
-				VERIFY: 'waitingForVerification'
+				VERIFY_REGISTRATION: 'waitingForVerification'
 			}
 		},
 		waitingForVerification: {
 			onEntry: ['UPDATE_ROUTE'],
 			on: {
-				VERIFY: 'confirmingVerification',
+				VERIFY_USER: 'confirmingVerification',
 				LOGIN: 'waitingForLogin',
 				REGISTER_USER: 'waitingForRegistration'
+			}
+		},
+		waitingForPasswordReset: {
+			onEntry: ['UPDATE_ROUTE'],
+			on: {
+				RESET: 'waitingForPasswordVerification',
+				LOGIN: 'waitingForLogin'
+			}
+		},
+		waitingForPasswordVerification: {
+			onEntry: ['COGNITO_REQUEST', 'UPDATE_ROUTE'],
+			on: {
+				VERIFY_RESET: 'confirmingPasswordVerification',
+				LOGIN: 'waitingForLogin'
 			}
 		},
 		loggingIn: {
 			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
 			on: {
-				SUCCESS: 'successfullyLoggedIn',
+				SUCCESS: {
+					successfullyLoggedIn: {
+						actions: ['UPDATE_ROUTE']
+					}
+				},
 				FAILURE: {
 					waitingForLogin: {
 						actions: ['SHOW_CONFIRMATION']
@@ -67,6 +86,18 @@ export const userMachine = Machine({
 			onExit: ['HIDE_LOADING']
 		},
 		confirmingVerification: {
+			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
+			on: {
+				SUCCESS: 'waitingForLogin',
+				FAILURE: {
+					waitingForVerification: {
+						actions: ['SHOW_CONFIRMATION']
+					}
+				}
+			},
+			onExit: ['HIDE_LOADING']
+		},
+		confirmingPasswordVerification: {
 			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
 			on: {
 				SUCCESS: 'waitingForLogin',

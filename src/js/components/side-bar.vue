@@ -15,7 +15,6 @@
 					>
 					</close-button>
 				</div>
-				<authenticate-paragraph></authenticate-paragraph>
 				<scrolling-container class="side-bar__wantlist" id="side-bar">
 					<wantlist></wantlist>
 				</scrolling-container>
@@ -28,7 +27,6 @@
 //	import VueTypes from 'vue-types';
 	import MainHeading from '@/js/atomic/main-heading';
 	import CloseButton from '@/js/atomic/close-button';
-	import AuthenticateParagraph from '@/js/atomic/authenticate-paragraph';
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	import Wantlist from '@/js/components/wantlist';
 	import {watch} from '@/js/helpers/dismiss-modal';
@@ -38,7 +36,6 @@
 		components: {
 			MainHeading,
 			CloseButton,
-			AuthenticateParagraph,
 			ScrollingContainer,
 			Wantlist
 		},

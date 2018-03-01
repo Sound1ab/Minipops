@@ -4,6 +4,15 @@ import {transition} from '@/js/vuex/fsm-transition';
 import {getFromLocalStorage, saveToLocalStorage} from '@/js/helpers/localStorage';
 import {COGNITO} from '@/js/vuex/api';
 import Router from '@/js/router/index';
+const lodashGet = require('lodash/get');
+
+const routes = {
+	waitingForLogin: '/login',
+	waitingForRegistration: '/login/registration',
+	waitingForVerification: '/login/verification',
+	waitingForPasswordReset: '/login/forgot-password-reset',
+	waitingForPasswordVerification: '/login/forgot-password-verification'
+};
 
 const state = {
 	state: userMachine.initial,
@@ -20,42 +29,50 @@ const actions = {
 			dispatch('USER_TRANSITION', {type: 'FAILURE', params: {path: '/login'}});
 		}
 	},
-	STORE_USER_IN_STATE ({commit}, {params: {user}}) {
-		saveToLocalStorage('vcollect_userId', user);
+	STORE_USER_IN_STATE ({commit}, {params: {user = '', rememberMe = false}}) {
+		if (rememberMe) {
+			saveToLocalStorage('vcollect_userId', user);
+		}
 		commit('storeUser', user);
 	},
-	UPDATE_ROUTE ({dispatch}, {params: {path}}) {
-		Router.push({path});
-	},
-	COGNITO_REQUEST ({dispatch}, {type, params: {emailAddress = '', username = '', password = '', verification = ''}}) {
-		let path;
-		if (type === 'LOGIN') {
-			path = '/current';
-		} else if (type === 'REGISTER_USER') {
-			path = '/login/verification';
-		} else if (type === 'VERIFY') {
-			path = '/login';
+	UPDATE_ROUTE ({state}, {params: {path = ''} = {}}) {
+		let nextPath;
+		if (path) {
+			nextPath = path;
+		} else {
+			nextPath = routes[state.state];
 		}
+		if (!nextPath) {
+			return;
+		}
+		Router.push({path: nextPath});
+	},
+	COGNITO_REQUEST ({dispatch}, {type, params: {path = '', emailAddress = '', username = '', password = '', verification = '', rememberMe = false}}) {
 		axios.post(COGNITO[type], {
 			emailAddress,
 			username,
 			password,
-			verification
+			verification,
+			type
 		})
 			.then(res => {
-				console.log(res);
 				if (res.data.code) {
-					console.log('err:', res.data.code);
-					dispatch('USER_TRANSITION', {type: 'FAILURE'});
+					console.log('err:', res.data.message);
+					const message = res.data.message;
+					dispatch('USER_TRANSITION', {type: 'FAILURE', params: {message}});
 				}
 				if (type === 'LOGIN' && !res.data.user) {
 					dispatch('USER_TRANSITION', {type: 'FAILURE'});
 				}
 				const {user = ''} = res.data;
-				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path}});
+				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path, rememberMe}});
 			})
-			.catch(() => {
-				dispatch('USER_TRANSITION', {type: 'FAILURE'});
+			.catch((err) => {
+				let message = 'Something\'s not quite right here';
+				if (lodashGet(err, 'response.data.message')) {
+					message = err.response.data.message;
+				}
+				dispatch('USER_TRANSITION', {type: 'FAILURE', params: {message}});
 			});
 	}
 };

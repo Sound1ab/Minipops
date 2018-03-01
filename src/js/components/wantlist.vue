@@ -5,7 +5,7 @@
 			:key="`${element.artist}-${index}`"
 			:configuration="swipeToRevealConfig"
 			:index="index"
-			:reset="wantlistConfirmation.state && wantlistConfirmation.value"
+			:reset="confirmationMessage.state && confirmationMessage.value"
 			:button-state="watchers.length > 0 && watchers.includes(element.spotifyId) ? 'removeWatch' : 'watch'"
 			@remove="handleRemove"
 			@watch="handleWatch"
@@ -39,7 +39,7 @@
 				items: state => state.wantlist.items,
 				user: state => state.user.user,
 				watchers: state => state.watch.watchers,
-				wantlistConfirmation: state => state.wantlist.confirmation
+				confirmationMessage: state => state.ui.confirmation
 			}),
 			swipeToRevealConfig () {
 				return {

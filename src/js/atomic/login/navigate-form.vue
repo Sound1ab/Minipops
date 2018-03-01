@@ -1,65 +1,49 @@
-<template>
-	<div class="navigate-form">
-		<span class="navigate-form__outer" v-if="$route.path === '/login'">
-			<hr class="navigate-form__border"/>
-			<p class="navigate-form__copy">Not yet registered?</p>
-			<p
-				@click="handleClick('/login/registration')"
-				class="navigate-form__link"
-			>
-				Create an account
-			</p>
-		</span>
-		<span class="navigate-form__outer" v-else-if="$route.path === '/login/registration'">
-			<p class="navigate-form__copy">Already registered?</p>
-			<span>
-				<p
-					@click="handleClick('/login')"
-					class="navigate-form__link"
-				>
-					Login
-				</p>
-					or
-				<p
-					@click="handleClick('/login/verification')"
-					class="navigate-form__link"
-				>
-					Verify
-				</p>
-			</span>
-		</span>
-		<span class="navigate-form__outer" v-else-if="$route.path === '/login/verification'">
-			<hr class="navigate-form__border"/>
-			<span>
-				<p
-					@click="handleClick('/login')"
-					class="navigate-form__link"
-				>
-					Login
-				</p>
-					or
-				<p
-					@click="handleClick('/login/registration')"
-					class="navigate-form__link"
-				>
-					Create an account
-				</p>
-			</span>
-		</span>
-	</div>
-</template>
-
-<script>
+<script type="text/jsx">
 	import VueTypes from 'vue-types';
+	import {mapActions} from 'vuex';
 	export default {
 		name: 'navigate-form',
 		props: {
-			to: VueTypes.string.def('register')
+			schema: VueTypes.object.def({})
 		},
 		methods: {
+			...mapActions([
+				'USER_TRANSITION'
+			]),
 			handleClick (path) {
-				this.$emit('handleNavigate', path);
+				this.USER_TRANSITION({type: path});
+			},
+			createLinkHtml (h, schema, end) {
+				return (
+					<span>
+						<p
+							onclick={this.handleClick.bind(null, schema.onClick)}
+							class="navigate-form__link"
+						>
+							{schema.copy}
+						</p>
+						{end ? null : ' or '}
+					</span>
+				)
+			},
+			createContainerHtml (h, schema) {
+				return (
+					<span class="navigate-form__outer">
+						{schema.border ? <hr  class="navigate-form__border"/> : null}
+						<p class="navigate-form__copy">{schema.heading}</p>
+						<span>{schema.children ? schema.children.map((el, index) => (
+							this.createLinkHtml(h, el, schema.children.length - 1 === index)
+						)) : null}</span>
+					</span>
+				);
 			}
+		},
+		render (h) {
+			return (
+				<div class="navigate-form">
+					{this.createContainerHtml(h, this.$props.schema)}
+				</div>
+			);
 		}
 	};
 </script>

@@ -6,23 +6,8 @@
 			:dataKey="'username'"
 			@updateInput="handleUpdate"
 		></login-input>
-		<login-input
-			:title="'Password'"
-			:value="password"
-			:dataKey="'password'"
-			:type="'password'"
-			@updateInput="handleUpdate"
-		></login-input>
-		<forgot-password
-			@handleClick="handleForgotPasswordClick"
-		></forgot-password>
-		<remember-me
-			:data-key="'rememberMe'"
-			:value="rememberMe"
-			@checkboxUpdate="handleUpdate"
-		></remember-me>
+		<p class="forgot-password__copy">Please enter your username to reset your password. You'll receive and email with a verification code.</p>
 		<navigate-form
-			:schema="navigateSchema"
 			@handleNavigate="handleNavigate"
 		></navigate-form>
 		<submit-button></submit-button>
@@ -50,24 +35,6 @@
 			password: VueTypes.string.def(''),
 			rememberMe: VueTypes.bool.def(false)
 		},
-		computed: {
-			navigateSchema () {
-				return {
-					border: true,
-					heading: 'Not yet registered?',
-					children: [
-						{
-							onClick: 'REGISTER_USER',
-							copy: 'Create an account'
-						},
-						{
-							onClick: 'LOGIN',
-							copy: 'Login'
-						}
-					]
-				};
-			}
-		},
 		methods: {
 			handleForgotPasswordClick () {
 				this.$emit('handleForgotPasswordClick');
@@ -84,3 +51,12 @@
 		}
 	};
 </script>
+
+<style lang="scss" type="text/scss">
+	.forgot-password {
+		&__copy {
+			color: grey;
+		}
+	}
+</style>
+

@@ -4,7 +4,12 @@ const state = {
 	sort: false,
 	loading: false,
 	tab: 'current',
-	authenticationMessage: false
+	authenticationMessage: false,
+	confirmation: {
+		state: false,
+		value: '',
+		message: ''
+	}
 };
 
 const actions = {
@@ -31,6 +36,12 @@ const actions = {
 	},
 	HIDE_AUTHENTICATION_MESSAGE ({commit}) {
 		commit('authenticationMessage', false);
+	},
+	SHOW_CONFIRMATION ({commit}, {type, params: {message = ''} = {}}) {
+		commit('showConfirmation', {state: true, value: type === 'SUCCESS', message});
+		setTimeout(() => {
+			commit('showConfirmation', {state: false, value: '', message: ''});
+		}, 1000);
 	}
 };
 
@@ -49,6 +60,9 @@ const mutations = {
 	},
 	authenticationMessage (state, payload) {
 		state.authenticationMessage = payload;
+	},
+	showConfirmation (state, payload) {
+		state.confirmation = payload;
 	}
 };
 
