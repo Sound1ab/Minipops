@@ -49,10 +49,10 @@
 			}
 		},
 		created () {
-			if (!this.$store.state.user || !this.$store.state.user.user) {
+			if (!this.$store.state.user || !this.$store.state.user.user.jwt) {
 				this.$store.watch(
 					function (state) {
-						return state.user.user;
+						return state.user.user.jwt;
 					},
 					this.onLoad,
 					{

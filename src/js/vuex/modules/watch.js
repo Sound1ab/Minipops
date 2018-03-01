@@ -20,13 +20,11 @@ const actions = {
 			.then(res => {
 				dispatch('WATCH_TRANSITION', {type: 'SUCCESS', params: {spotifyId}});
 			})
-			.catch(err => {
-				console.log(err);
+			.catch(() => {
 				dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
 			});
 	},
 	RETRIEVE_WATCHERS ({commit, dispatch}, {type, params: {user}}) {
-		console.log('user', user);
 		if (!user) {
 			dispatch('WATCH_TRANSITION', {type: 'FAILURE'});
 		}

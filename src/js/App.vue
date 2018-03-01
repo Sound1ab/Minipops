@@ -1,20 +1,19 @@
 <template>
 	<div id="app">
 		<side-bar></side-bar>
+		<user-profile></user-profile>
 		<span
 			class="app-container"
-			:class="{'app-container--menu-active': open}"
+			:class="{'app-container--menu-active': menu, 'app-container--profile-active': profile}"
 		>
 			<transition name="fade-half">
-				<div class="app-container__background" v-if="open"></div>
+				<div class="app-container__background" v-if="menu || profile"></div>
 			</transition>
 			<heading-bar></heading-bar>
 			<toggle></toggle>
 			<average-price></average-price>
 			<search-overlay></search-overlay>
-			<!--<transition name="fade-up" mode="out-in">-->
-				<router-view class="router-view"/>
-			<!--</transition>-->
+			<router-view class="router-view"/>
 		</span>
 		<loading></loading>
 		<confirmation></confirmation>
@@ -30,6 +29,7 @@
 	import SearchOverlay from '@/js/components/search-overlay';
 	import AveragePrice from '@/js/components/average-price';
 	import SideBar from '@/js/components/side-bar';
+	import UserProfile from '@/js/components/user-profile';
 	import Loading from '@/js/components/loading';
 	import Confirmation from '@/js/components/confirmation';
 	import AuthenticateMessage from '@/js/components/authenticate-message';
@@ -43,6 +43,7 @@
 			Sort,
 			AveragePrice,
 			SideBar,
+			UserProfile,
 			Loading,
 			Confirmation,
 			AuthenticateMessage,
@@ -52,7 +53,8 @@
 			...mapState({
 				wantlist: state => state.wantlist,
 				search: state => state.search,
-				open: state => state.ui.menu,
+				menu: state => state.ui.menu,
+				profile: state => state.ui.profile,
 				user: state => state.user.user,
 				tab: state => state.toggle.state
 			})
@@ -67,15 +69,10 @@
 		},
 		watch: {
 			user: function (val) {
-				if (typeof val === 'string') {
-					this.SUBSCRIPTION_TRANSITION({type: 'LOADED', params: {user: val}});
-					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS', params: {user: val}});
-					this.WANTLIST_TRANSITION({type: 'FETCH_WANTLIST', params: {user: val}});
-				}
-			},
-			open: function open (val) {
-				if (!open.invoked && val) {
-					open.invoked = true;
+				if (typeof val.jwt === 'string') {
+					this.SUBSCRIPTION_TRANSITION({type: 'LOADED', params: {user: val.jwt}});
+					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS', params: {user: val.jwt}});
+					this.WANTLIST_TRANSITION({type: 'FETCH_WANTLIST', params: {user: val.jwt}});
 				}
 			}
 		},
@@ -109,6 +106,9 @@
 		justify-content: flex-start;
 		&--menu-active {
 			transform: translateX(320px);
+		}
+		&--profile-active {
+			transform: translateX(-320px);
 		}
 		&__background {
 			position: absolute;

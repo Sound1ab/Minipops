@@ -44,7 +44,7 @@
 		},
 		computed: {
 			...mapState({
-				user: state => state.user.user,
+				user: state => state.user.user.jwt,
 				tab: state => state.toggle.state,
 				query: state => state.search.query
 			}),

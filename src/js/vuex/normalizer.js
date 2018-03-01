@@ -61,7 +61,6 @@ export function refineEbaylist (data) {
 			postage: parseFloat(postage).toFixed(2)
 		};
 	});
-	console.log(refined);
 	return refined;
 }
 

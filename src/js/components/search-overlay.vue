@@ -63,7 +63,7 @@
 		left: 0;
 		height: 100%;
 		width: 100%;
-		padding-top: em(112);
+		padding-top: em(144);
 		background-color: rgba(0,0,0,.5);
 		z-index: 2;
 		&__input {

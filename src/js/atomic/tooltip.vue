@@ -88,6 +88,7 @@
 		color: $tertiaryColour;
 		text-align: center;
 		box-shadow: 0 0 20px 4px rgba(0,0,0,.2);
+		z-index: 10;
 		&__triangle {
 			border: solid transparent;
 			content: " ";

@@ -37,7 +37,7 @@
 			...mapState({
 				tab: state => state.toggle.state,
 				items: state => state.wantlist.items,
-				user: state => state.user.user,
+				user: state => state.user.user.jwt,
 				watchers: state => state.watch.watchers,
 				confirmationMessage: state => state.ui.confirmation
 			}),

@@ -3,6 +3,7 @@ const state = {
 	dropdown: false,
 	sort: false,
 	search: false,
+	profile: false,
 	loading: false,
 	tab: 'current',
 	authenticationMessage: false,
@@ -28,6 +29,9 @@ const actions = {
 	},
 	TOGGLE_SEARCH ({commit}, payload) {
 		commit('toggleSearch', payload);
+	},
+	TOGGLE_PROFILE ({commit}, payload) {
+		commit('toggleProfile', payload);
 	},
 	SHOW_LOADING ({commit}) {
 		commit('loading', true);
@@ -58,6 +62,9 @@ const mutations = {
 	},
 	toggleSort (state, payload) {
 		state.sort = payload;
+	},
+	toggleProfile (state, payload) {
+		state.profile = payload;
 	},
 	toggleSearch (state, payload) {
 		state.search = payload;

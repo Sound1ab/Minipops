@@ -18,6 +18,7 @@
 		"invalidate": "aws cloudfront --profile sound1ab create-invalidation --distribution-id E172SLVW627N53 --paths '/*'"
 	},
 	"dependencies": {
+		"aws-amplify": "^0.2.0",
 		"axios": "^0.17.1",
 		"babel-helper-vue-jsx-merge-props": "^2.0.3",
 		"babel-plugin-jsx-event-modifiers": "^2.0.5",
@@ -33,6 +34,7 @@
 		"fs": "0.0.1-security",
 		"hammerjs": "^2.0.8",
 		"intersection-observer": "^0.5.0",
+		"jwt-decode": "^2.2.0",
 		"lodash": "^4.17.4",
 		"node-sass": "^4.7.2",
 		"sass-loader": "^6.0.6",
@@ -45,8 +47,7 @@
 		"vue-types": "^1.1.3",
 		"vuex": "^3.0.1",
 		"webpack-pwa-manifest": "^3.5.0",
-		"xstate": "^3.0.3",
-		"aws-amplify": "^0.2.0"
+		"xstate": "^3.0.3"
 	},
 	"devDependencies": {
 		"@vue/test-utils": "^1.0.0-beta.10",

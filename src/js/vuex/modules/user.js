@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {userMachine} from '@/js/vuex/FSM/userMachine';
 import {transition} from '@/js/vuex/fsm-transition';
-import {getFromLocalStorage, saveToLocalStorage} from '@/js/helpers/localStorage';
+import {getFromLocalStorage, saveToLocalStorage, removeItemFromLocalStorage} from '@/js/helpers/localStorage';
 import {COGNITO} from '@/js/vuex/api';
 import Router from '@/js/router/index';
+import jwtDecode from 'jwt-decode';
 const lodashGet = require('lodash/get');
 
 const routes = {
@@ -16,7 +17,11 @@ const routes = {
 
 const state = {
 	state: userMachine.initial,
-	user: null
+	user: {
+		jwt: '',
+		username: '',
+		email: ''
+	}
 };
 
 const actions = {
@@ -33,7 +38,19 @@ const actions = {
 		if (rememberMe) {
 			saveToLocalStorage('vcollect_userId', user);
 		}
-		commit('storeUser', user);
+		const decodedJwt = jwtDecode(user);
+		commit('storeUser', {
+			jwt: user,
+			username: decodedJwt['cognito:username'],
+			email: decodedJwt.email
+		});
+	},
+	REMOVE_USER_FROM_LOCAL_STORE ({dispatch}) {
+		const user = getFromLocalStorage('vcollect_userId');
+		if (user) {
+			removeItemFromLocalStorage('vcollect_userId');
+		}
+		dispatch('USER_TRANSITION', {type: 'SUCCESS'});
 	},
 	UPDATE_ROUTE ({state}, {params: {path = ''} = {}}) {
 		let nextPath;

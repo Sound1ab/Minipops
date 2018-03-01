@@ -11,18 +11,16 @@ const state = {
 const actions = {
 	ARTIST_TRANSITION: transition.bind(null, artistMachine),
 	FETCH_ARTIST_DATA ({commit, dispatch, rootState}, {params: {query}}) {
-		const user = rootState.user.user;
+		const user = rootState.user.user.jwt;
 		if (!query || !user) {
 			dispatch('ARTIST_TRANSITION', {type: 'FAILURE'});
 		}
 		axios.get(ITEMS['artist'], {params: {user, artist: query}})
 			.then(res => {
-				console.log(res);
 				commit('updateArtistInfo', res.data);
 				dispatch('ARTIST_TRANSITION', {type: 'SUCCESS'});
 			})
-			.catch(err => {
-				console.log(err);
+			.catch(() => {
 				dispatch('ARTIST_TRANSITION', {type: 'FAILURE'});
 			});
 	}

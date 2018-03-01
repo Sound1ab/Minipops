@@ -1,5 +1,5 @@
 <template>
-	<div class="side-bar">
+	<div class="side-bar" :class="{'side-bar--active': open}">
 		<div class="side-bar__menu">
 			<div class="side-bar__heading">
 				<main-heading
@@ -70,6 +70,11 @@
 		top: 0;
 		left: 0;
 		pointer-events: none;
+		opacity: 0;
+		transition: opacity .5s;
+		&--active {
+			opacity: 1;
+		}
 		&__menu {
 			position: relative;
 			width: em(320);
@@ -83,9 +88,11 @@
 		}
 		&__heading {
 			padding: em(16);
+			height: em(88);
 			color: white;
 			display: flex;
 			justify-content: space-between;
+			align-items: center;
 		}
 		&__wantlist {
 			background: linear-gradient(to bottom, $secondaryColour 0%, darken( $secondaryColour, 15% ) 100%);

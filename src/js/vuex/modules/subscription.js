@@ -14,15 +14,12 @@ const state = {
 const actions = {
 	SUBSCRIPTION_TRANSITION: transition.bind(null, subscriptionMachine),
 	CHECKING_FOR_SERVICE_WORKER ({commit, dispatch}, {params}) {
-		console.log('CHECKING_FOR_SERVICE_WORKER', params);
 		if (!('serviceWorker' in navigator)) {
-			console.log('cancelling service worker install');
 			dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			return;
 		}
 		navigator.serviceWorker.ready
 			.then((res) => {
-				console.log('service worker ready', res);
 				commit('saveServiceRegistration', res);
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS', params});
 			})
@@ -32,7 +29,6 @@ const actions = {
 			});
 	},
 	CHECK_FOR_NOTIFICATION ({dispatch}, {params}) {
-		console.log('CHECK_FOR_NOTIFICATION', params);
 		if (Notification.permission === 'granted') {
 			dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS', params});
 		} else {
@@ -46,13 +42,11 @@ const actions = {
 		}
 	},
 	CHECK_FOR_SUBSCRIPTION ({dispatch, state}, {params: {user}}) {
-		console.log('CHECK_FOR_SUBSCRIPTION', user);
 		const registration = state.registration;
 		registration.pushManager.getSubscription()
 			.then(subscription => {
 				const isSubscribed = !(subscription === null);
 				if (isSubscribed) {
-					console.log('User IS subscribed.');
 					dispatch('SUBSCRIPTION_TRANSITION', {
 						type: 'SUCCESS',
 						params: {
@@ -68,7 +62,6 @@ const actions = {
 			});
 	},
 	SUBSCRIBE_USER ({dispatch, state}, {params: {user}}) {
-		console.log('SUBSCRIBE_USER', user);
 		const registration = state.registration;
 		const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 		registration.pushManager.subscribe({
@@ -88,13 +81,11 @@ const actions = {
 					}
 				});
 			})
-			.catch((err) => {
-				console.log('Failed to subscribe the user: ', err);
+			.catch(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			});
 	},
 	UNSUBSCRIBE_USER ({dispatch, state}, {params: {user}}) {
-		console.log('UNSUBSCRIBE_USER', user);
 		const registration = state.registration;
 		registration.pushManager.getSubscription()
 			.then(subscription => {
@@ -116,7 +107,6 @@ const actions = {
 			});
 	},
 	UPDATE_SUBSCRIPTION_ON_SERVER ({dispatch}, {params: {type, subscription, user}}) {
-		console.log('UPDATE_SUBSCRIPTION_ON_SERVER', type, subscription, user);
 		axios.post(SUBSCRIBE[type], {subscription, user})
 			.then(response => {
 				if (!response.ok) {
@@ -124,8 +114,7 @@ const actions = {
 				}
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS'});
 			})
-			.catch(err => {
-				console.log(err);
+			.catch(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			});
 	}

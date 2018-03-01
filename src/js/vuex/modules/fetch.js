@@ -41,28 +41,24 @@ const state = {
 const actions = {
 	FETCH_TRANSITION: transition.bind(null, fetchMachine),
 	CREATE_CANCEL_TOKEN ({commit, dispatch}, {params}) {
-		console.log('token params', params);
 		let CancelToken = axios.CancelToken;
 		let source = CancelToken.source();
 		commit('createCancelToken', source);
 		dispatch('FETCH_TRANSITION', {type: 'TOKEN_CREATED', params});
 	},
 	CANCEL_OUTGOING_REQUEST ({state}) {
-		console.log('cancelling requirest');
 		if (state.cancelToken) {
 			state.cancelToken.cancel();
 		}
 	},
 	FETCH_DATA ({commit, rootState, dispatch, state}, {params: {query}}) {
-		console.log('params', query);
 		const currentTab = rootState.toggle.state;
 		const keywords = addSlashes(query);
 		console.log('keywords', keywords);
-		const user = rootState.user.user || '';
+		const user = rootState.user.user.jwt || '';
 		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {
 				if (res.data) {
-					console.log(res.data);
 					let data = normalizer[currentTab](res.data);
 					commit('updateItems', {type: currentTab, data, query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});
@@ -72,7 +68,6 @@ const actions = {
 				}
 			})
 			.catch((err) => {
-				console.log('err', err.message);
 				if (err.message === 'Request failed with status code 400') {
 					dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
 				} else {

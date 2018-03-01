@@ -116,7 +116,16 @@ export const userMachine = Machine({
 			}
 		},
 		successfullyLoggedIn: {
-			onEntry: ['UPDATE_ROUTE', 'STORE_USER_IN_STATE']
+			onEntry: ['UPDATE_ROUTE', 'STORE_USER_IN_STATE'],
+			on: {
+				SIGN_OUT: 'signingOut'
+			}
+		},
+		signingOut: {
+			onEntry: ['REMOVE_USER_FROM_LOCAL_STORE'],
+			on: {
+				SUCCESS: 'waitingForLogin'
+			}
 		}
 	}
 });

@@ -31,7 +31,6 @@
 				return str.replace('-', ' ');
 			},
 			retrieveRouteEnteringQuery (routeEntering) {
-				console.log(routeEntering);
 				return this.$store.state.fetch[routeEntering].query;
 			},
 			handleArtistReleasesRoute (artist, spotifyId) {

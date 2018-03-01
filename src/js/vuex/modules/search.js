@@ -27,7 +27,6 @@ const actions = {
 		commit('updateSearch', query);
 	},
 	CHECKING_TAB ({dispatch}) {
-		console.log('checking tab');
 		dispatch('SEARCH_TRANSITION', {type: 'TAB_CHECKED'});
 	},
 	DISPATCHING_SEARCH ({dispatch, state, rootState}) {

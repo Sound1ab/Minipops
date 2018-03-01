@@ -28,8 +28,12 @@
 			</svgicon>
 		</div>
 		<sort
+			class="heading-bar__sort"
 			:disabled="tab !== 'current' && tab !== 'completed'"
 		></sort>
+		<user-profile-icon
+			class="heading-bar__user-profile"
+		></user-profile-icon>
 	</nav>
 </template>
 
@@ -38,6 +42,7 @@
 	import MainHeading from '@/js/atomic/main-heading';
 	import SearchBar from '@/js/components/search-bar';
 	import Sort from '@/js/components/sort';
+	import UserProfileIcon from '@/js/atomic/user-profile-icon';
 	import '@/assets/compiled-icons/magnify';
 	import {mapActions, mapState} from 'vuex';
 	export default {
@@ -46,7 +51,8 @@
 			MenuButton,
 			MainHeading,
 			SearchBar,
-			Sort
+			Sort,
+			UserProfileIcon
 		},
 		computed: {
 			...mapState({
@@ -80,7 +86,7 @@
 
 <style lang="scss" type="text/scss">
 	.heading-bar {
-		flex: 0 0 56px;
+		flex: 0 0 auto;
 		display: flex;
 		padding: em(16);
 		position: relative;
@@ -92,10 +98,13 @@
 			z-index: 2;
 		}
 		&__heading {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translateX(-50%) translateY(-50%);
+			margin-left: em(16);
+			@include mqMin(xs) {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translateX(-50%) translateY(-50%);
+			}
 		}
 		&__search {
 			margin-left: auto;
@@ -108,6 +117,12 @@
 			right: em(56);
 			width: calc(100% - 32px);
 			z-index: 1;
+		}
+		&__sort {
+			margin-left: em(16);
+		}
+		&__user-profile {
+			margin-left: em(16);
 		}
 	}
 </style>

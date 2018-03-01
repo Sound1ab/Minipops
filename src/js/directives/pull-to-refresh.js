@@ -15,7 +15,6 @@ export default function pullToRefresh () {
 			el.style.transition = 'all .5s';
 			el.style.transform = '';
 			if (pullDistance > boundary) {
-				console.log('fire', pullDistance);
 				reset();
 				callback();
 			}
