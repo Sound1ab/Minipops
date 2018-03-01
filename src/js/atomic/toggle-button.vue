@@ -4,7 +4,7 @@
 		class="toggle-button"
 		:class="{'toggle-button--active': isActive}"
 	>
-		<h1>{{heading | upperCase}}</h1>
+		<h1 class="toggle-button__heading">{{heading | upperCase}}</h1>
 	</button>
 </template>
 
@@ -49,6 +49,9 @@
 				left: 0;
 				bottom: 0;
 			}
+		}
+		&__heading {
+			font-weight: bold;
 		}
 	}
 </style>

@@ -8,12 +8,24 @@
 // -------------------------
 
 	// family
-	$ffBase: 			'Roboto', sans-serif;
-	$ffSecondary: 		'Roboto', sans-serif;
-	$ffHeadings: 		'Roboto', sans-serif;
+	$ffBase: 			-apple-system, BlinkMacSystemFont,
+						"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+						"Fira Sans", "Droid Sans", "Helvetica Neue",
+						sans-serif;
+
+	$ffSecondary: 		-apple-system, BlinkMacSystemFont,
+						"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+						"Fira Sans", "Droid Sans", "Helvetica Neue",
+						sans-serif;
+
+	$ffHeadings: 		-apple-system, BlinkMacSystemFont,
+						"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+						"Fira Sans", "Droid Sans", "Helvetica Neue",
+						sans-serif;
 
 
-	// style
+
+// style
 	$fzBase: 			16 !default;
 	$lhBase: 			19 !default;
 	$fwBase: 			400;

@@ -11,6 +11,7 @@
 			<heading-bar></heading-bar>
 			<toggle></toggle>
 			<average-price></average-price>
+			<search-overlay></search-overlay>
 			<!--<transition name="fade-up" mode="out-in">-->
 				<router-view class="router-view"/>
 			<!--</transition>-->
@@ -26,6 +27,7 @@
 	import HeadingBar from '@/js/components/heading-bar';
 	import Toggle from '@/js/components/toggle';
 	import Sort from '@/js/components/sort';
+	import SearchOverlay from '@/js/components/search-overlay';
 	import AveragePrice from '@/js/components/average-price';
 	import SideBar from '@/js/components/side-bar';
 	import Loading from '@/js/components/loading';
@@ -43,7 +45,8 @@
 			SideBar,
 			Loading,
 			Confirmation,
-			AuthenticateMessage
+			AuthenticateMessage,
+			SearchOverlay
 		},
 		computed: {
 			...mapState({

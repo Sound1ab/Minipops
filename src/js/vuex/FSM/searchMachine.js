@@ -4,20 +4,20 @@ const id = 'Search';
 
 export const searchMachine = Machine({
 	id,
-	initial: 'closed',
+	initial: 'searching',
 	strict: true,
 	states: {
-		closed: {
-			on: {
-				SEARCH_SELECTED: 'searching',
-				UPDATE_SEARCH: {
-					closed: {
-						actions: ['UPDATE_SEARCH']
-					}
-				},
-				TEXT_INPUT: 'searching.typing'
-			}
-		},
+		// closed: {
+		// 	on: {
+		// 		SEARCH_SELECTED: 'searching',
+		// 		UPDATE_SEARCH: {
+		// 			closed: {
+		// 				actions: ['UPDATE_SEARCH']
+		// 			}
+		// 		},
+		// 		TEXT_INPUT: 'searching.typing'
+		// 	}
+		// },
 		searching: {
 			initial: 'searchReady',
 			states: {

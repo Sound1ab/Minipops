@@ -15,11 +15,18 @@
 			:className="'gamma'"
 		>
 		</main-heading>
-		<search-bar
-			class="heading-bar__search-bar"
-			@searchSubmit="handleSearchSubmit"
+		<div
+			@click="handleOpenSearch"
+			class="heading-bar__search"
 		>
-		</search-bar>
+			<svgicon
+				name="magnify"
+				color="white"
+				width="30"
+				height="30"
+			>
+			</svgicon>
+		</div>
 		<sort
 			:disabled="tab !== 'current' && tab !== 'completed'"
 		></sort>
@@ -31,6 +38,7 @@
 	import MainHeading from '@/js/atomic/main-heading';
 	import SearchBar from '@/js/components/search-bar';
 	import Sort from '@/js/components/sort';
+	import '@/assets/compiled-icons/magnify';
 	import {mapActions, mapState} from 'vuex';
 	export default {
 		name: 'heading-bar',
@@ -42,18 +50,23 @@
 		},
 		computed: {
 			...mapState({
-				tab: state => state.toggle.state
+				tab: state => state.toggle.state,
+				search: state => state.ui.search
 			})
 		},
 		methods: {
 			...mapActions([
-				'TOGGLE_MENU'
+				'TOGGLE_MENU',
+				'TOGGLE_SEARCH'
 			]),
 			handleMenuClick () {
 				this.TOGGLE_MENU(true);
 			},
 			handleSearchSubmit () {
 				console.log('handleSearchSubmit');
+			},
+			handleOpenSearch () {
+				this.TOGGLE_SEARCH(true);
 			},
 			handleButtonClick () {
 				console.log('fire');
@@ -67,11 +80,12 @@
 
 <style lang="scss" type="text/scss">
 	.heading-bar {
-		/*display: flex;*/
-		/*justify-content: space-between;*/
+		flex: 0 0 56px;
+		display: flex;
 		padding: em(16);
 		position: relative;
 		background-color: transparent;
+		align-items: center;
 		&__menu {
 			position: relative;
 			display: inline-block;
@@ -82,6 +96,10 @@
 			left: 50%;
 			top: 50%;
 			transform: translateX(-50%) translateY(-50%);
+		}
+		&__search {
+			margin-left: auto;
+			cursor: pointer;
 		}
 		&__search-bar {
 			position: absolute;

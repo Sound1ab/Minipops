@@ -83,7 +83,7 @@
 
 <style lang="scss" type="text/scss">
 	.toggle {
-		flex: 0 0 auto;
+		flex: 0 0 56px;
 		position: relative;
 		width: 100%;
 		z-index: 1;

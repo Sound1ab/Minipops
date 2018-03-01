@@ -1,5 +1,4 @@
 import {Machine} from 'xstate';
-import {getFromLocalStorage} from '@/js/helpers/localStorage';
 
 const id = 'Wantlist';
 

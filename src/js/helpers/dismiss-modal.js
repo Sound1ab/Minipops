@@ -18,6 +18,7 @@ function addClosest () {
 
 export function watch (selector, callback) {
 	addClosest();
+	hammertime.domEvents = true;
 	hammertime.on('tap', checkIfInModal.bind(null, selector, callback));
 }
 

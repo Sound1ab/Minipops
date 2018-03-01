@@ -1,9 +1,9 @@
 <template>
-	<form @submit.prevent="submit" class="form-input" ref="input">
+	<form @submit.prevent="submit" class="form-input">
 		<input
-			id="input"
+			ref="input"
 			class="form-input__input"
-			@blur="handleBlur"
+			@blur.stop.capture.prevent="handleBlur"
 			v-model="computedInput"
 			type="text"
 			placeholder="Search..."
@@ -32,6 +32,10 @@
 			handleBlur () {
 				this.$emit('inputBlur');
 			}
+		},
+		mounted () {
+			const ref = this.$refs['input'];
+			ref.focus();
 		}
 	};
 </script>
@@ -39,11 +43,10 @@
 <style lang="scss" type="text/scss">
 	.form-input {
 		&__input {
-			width: 100%;
+			@include responsive-font(8vw, 32px, 80px, 32px);
 			background-color: transparent;
 			color: white;
-			padding: 0;
-			visibility: hidden;
+			width: 100%;
 		}
 	}
 </style>

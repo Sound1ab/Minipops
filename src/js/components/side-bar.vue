@@ -1,30 +1,27 @@
 <template>
 	<div class="side-bar">
-		<!--<transition name="side-bar">-->
-			<div class="side-bar__menu">
-				<div class="side-bar__heading">
-					<main-heading
-						:text="'Wantlist'"
-						:color="'white'"
-						:className="'gamma'"
-					>
-					</main-heading>
-					<close-button
-						:color="'white'"
-						@closeClick="handleCloseBar"
-					>
-					</close-button>
-				</div>
-				<scrolling-container class="side-bar__wantlist" id="side-bar">
-					<wantlist></wantlist>
-				</scrolling-container>
+		<div class="side-bar__menu">
+			<div class="side-bar__heading">
+				<main-heading
+					:text="'Wantlist'"
+					:color="'white'"
+					:className="'gamma'"
+				>
+				</main-heading>
+				<close-button
+					:color="'white'"
+					@closeClick="handleCloseBar"
+				>
+				</close-button>
 			</div>
-		<!--</transition>-->
+			<scrolling-container class="side-bar__wantlist" id="side-bar">
+				<wantlist></wantlist>
+			</scrolling-container>
+		</div>
 	</div>
 </template>
 
 <script>
-//	import VueTypes from 'vue-types';
 	import MainHeading from '@/js/atomic/main-heading';
 	import CloseButton from '@/js/atomic/close-button';
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
