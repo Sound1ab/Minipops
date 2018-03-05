@@ -72,7 +72,10 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			font-weight: bold;
-			font-size: 14px;
+			font-size: 12px;
+			@include mqMin(xs) {
+				font-size: 14px;
+			}
 		}
 		&__drag {
 			display: flex;

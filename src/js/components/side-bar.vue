@@ -71,9 +71,12 @@
 		left: 0;
 		pointer-events: none;
 		opacity: 0;
-		transition: opacity .5s;
+		transition: opacity .1s;
+		transition-delay: 1s;
 		&--active {
+			transition-delay: 0s;
 			opacity: 1;
+			pointer-events: all;
 		}
 		&__menu {
 			position: relative;
@@ -87,6 +90,7 @@
 			pointer-events: all;
 		}
 		&__heading {
+			flex: 0 0 88px;
 			padding: em(16);
 			height: em(88);
 			color: white;

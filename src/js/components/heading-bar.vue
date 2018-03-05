@@ -33,6 +33,7 @@
 		></sort>
 		<user-profile-icon
 			class="heading-bar__user-profile"
+			@handleIconClick="handleIconClick"
 		></user-profile-icon>
 	</nav>
 </template>
@@ -63,7 +64,8 @@
 		methods: {
 			...mapActions([
 				'TOGGLE_MENU',
-				'TOGGLE_SEARCH'
+				'TOGGLE_SEARCH',
+				'TOGGLE_PROFILE'
 			]),
 			handleMenuClick () {
 				this.TOGGLE_MENU(true);
@@ -79,6 +81,9 @@
 			},
 			handleBackClick () {
 				this.$router.go(-1);
+			},
+			handleIconClick () {
+				this.TOGGLE_PROFILE(!this.profile);
 			}
 		}
 	};

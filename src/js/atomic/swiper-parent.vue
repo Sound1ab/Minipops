@@ -40,6 +40,7 @@
 		flex: 1 1 100%;
 		overflow: hidden;
 		&__wrapper {
+			height: 100%;
 			display: flex;
 		}
 		&__slide {

@@ -13,10 +13,11 @@
 			>
 			</main-heading>
 		</div>
-		<div class="user-profile__details">
+		<scrolling-container class="user-profile__details">
 			<user-profile-icon
 				class="user-profile__icon"
 				:size="160"
+				:allow-image-upload="true"
 			></user-profile-icon>
 			<main-heading
 				class="user-profile__username"
@@ -31,7 +32,7 @@
 			<h2 class="user-profile__info-heading delta">EMAIL</h2>
 			<p class="user-profile__info-detail">{{user.email}}</p>
 			<button @click="handleSignOut" class="user-profile__sign-out">Sign out</button>
-		</div>
+		</scrolling-container>
 	</div>
 </template>
 
@@ -39,6 +40,7 @@
 	import MainHeading from '@/js/atomic/main-heading';
 	import CloseButton from '@/js/atomic/close-button';
 	import UserProfileIcon from '@/js/atomic/user-profile-icon';
+	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	import {mapActions, mapState} from 'vuex';
 	import {watch} from '@/js/helpers/dismiss-modal';
 	export default {
@@ -46,6 +48,7 @@
 		components: {
 			MainHeading,
 			CloseButton,
+			ScrollingContainer,
 			UserProfileIcon
 		},
 		computed: {
@@ -88,10 +91,16 @@
 		top: 0;
 		right: 0;
 		opacity: 0;
-		transition: opacity .5s;
+		transition: opacity .1s;
+		transition-delay: 1s;
 		background: linear-gradient(to bottom, $secondaryColour 0%, darken( $secondaryColour, 15% ) 100%);
+		display: flex;
+		flex-direction: column;
+		pointer-events: none;
 		&--active {
+			transition-delay: 0s;
 			opacity: 1;
+			pointer-events: all;
 		}
 		&__icon {
 			position: relative;
@@ -99,6 +108,7 @@
 			transform: translateX(-50%);
 		}
 		&__heading {
+			flex: 0 0 88px;
 			background-color: $primaryColour;
 			padding: em(16);
 			height: em(88);
@@ -108,6 +118,7 @@
 			align-items: center;
 		}
 		&__details {
+			flex: 1 1 100%;
 			padding: em(16);
 		}
 		&__username {

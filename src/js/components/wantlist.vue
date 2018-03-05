@@ -26,7 +26,7 @@
 <script>
 	import SwipeToReveal from '@/js/components/swipe-to-reveal';
 	import WantlistItem from '@/js/components/wantlist-item';
-	import {mapState, mapActions} from 'vuex';
+	import {mapState, mapActions, mapGetters} from 'vuex';
 	export default {
 		name: 'wantlist',
 		components: {
@@ -37,10 +37,13 @@
 			...mapState({
 				tab: state => state.toggle.state,
 				items: state => state.wantlist.items,
-				user: state => state.user.user.jwt,
+				user: state => state.user.user.idToken,
 				watchers: state => state.watch.watchers,
 				confirmationMessage: state => state.ui.confirmation
 			}),
+			...mapGetters([
+				'wantlistIds'
+			]),
 			swipeToRevealConfig () {
 				return {
 					translateX: 144,
@@ -102,7 +105,9 @@
 						imageUrl
 					}
 				});
-				this.handleRemoveWatcher(index);
+				if (this.wantlistIds.includes(spotifyId)) {
+					this.handleRemoveWatcher(index);
+				}
 			},
 			handleClick (index) {
 				const {artist, album} = this.items[index];

@@ -6,6 +6,7 @@ import {COGNITO} from '@/js/vuex/api';
 import Router from '@/js/router/index';
 import jwtDecode from 'jwt-decode';
 const lodashGet = require('lodash/get');
+const fallbackImage = require('@/assets/images/recollect-icon.png');
 
 const routes = {
 	waitingForLogin: '/login',
@@ -18,31 +19,46 @@ const routes = {
 const state = {
 	state: userMachine.initial,
 	user: {
-		jwt: '',
+		idToken: '',
+		accessToken: '',
+		refreshToken: '',
 		username: '',
-		email: ''
+		email: '',
+		picture: fallbackImage
 	}
 };
 
 const actions = {
 	USER_TRANSITION: transition.bind(null, userMachine),
 	CHECKING_FOR_USER ({dispatch}) {
-		const user = getFromLocalStorage('vcollect_userId');
-		if (user) {
-			dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path: '/current'}});
+		const session = getFromLocalStorage('vcollect_userId');
+		if (session) {
+			const parsedSession = JSON.parse(session);
+			dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {session: parsedSession, path: '/current'}});
 		} else {
 			dispatch('USER_TRANSITION', {type: 'FAILURE', params: {path: '/login'}});
 		}
 	},
-	STORE_USER_IN_STATE ({commit}, {params: {user = '', rememberMe = false}}) {
-		if (rememberMe) {
-			saveToLocalStorage('vcollect_userId', user);
+	STORE_USER_IN_STATE ({commit}, {params: {session = '', rememberMe = false} = {}}) {
+		if (!session) {
+			return;
 		}
-		const decodedJwt = jwtDecode(user);
+		const {idToken, accessToken, refreshToken} = session;
+		if (rememberMe) {
+			const stringifiedSession = JSON.stringify(session);
+			console.log(stringifiedSession);
+			saveToLocalStorage('vcollect_userId', stringifiedSession);
+		}
+		const decodedJwt = jwtDecode(idToken);
+		console.log(decodedJwt);
 		commit('storeUser', {
-			jwt: user,
+			...state.user,
+			idToken,
+			accessToken,
+			refreshToken,
 			username: decodedJwt['cognito:username'],
-			email: decodedJwt.email
+			email: decodedJwt.email,
+			picture: decodedJwt['custom:picture'] ? decodedJwt['custom:picture'] : fallbackImage
 		});
 	},
 	REMOVE_USER_FROM_LOCAL_STORE ({dispatch}) {
@@ -78,11 +94,11 @@ const actions = {
 					const message = res.data.message;
 					dispatch('USER_TRANSITION', {type: 'FAILURE', params: {message}});
 				}
-				if (type === 'LOGIN' && !res.data.user) {
+				if (type === 'LOGIN' && !res.data.session) {
 					dispatch('USER_TRANSITION', {type: 'FAILURE'});
 				}
-				const {user = ''} = res.data;
-				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {user, path, rememberMe}});
+				const {session = ''} = res.data;
+				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {session, path, rememberMe}});
 			})
 			.catch((err) => {
 				let message = 'Something\'s not quite right here';
@@ -91,6 +107,21 @@ const actions = {
 				}
 				dispatch('USER_TRANSITION', {type: 'FAILURE', params: {message}});
 			});
+	},
+	UPDATE_USER_ATTRIBUTE ({dispatch}, {type, params: {session, username, attribute, newValue}}) {
+		axios.post(COGNITO[type], {session, username, attribute, newValue})
+			.then(res => {
+				console.log('res', res);
+				const session = res.data;
+				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {session, rememberMe: true}});
+			})
+			.catch((err) => {
+				dispatch('USER_TRANSITION', {type: 'FAILURE'});
+				console.log('err', err);
+			});
+	},
+	UPDATE_LOCAL_USER_ATTRIBUTE ({commit}, {params: {session, attribute, newValue}}) {
+		commit('updateLocalUserAttribute', {attribute, newValue});
 	}
 };
 
@@ -100,6 +131,9 @@ const mutations = {
 	},
 	storeUser (state, user) {
 		state.user = user;
+	},
+	updateLocalUserAttribute (state, {attribute, newValue}) {
+		state.user[attribute] = newValue;
 	}
 };
 

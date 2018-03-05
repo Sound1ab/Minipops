@@ -69,10 +69,10 @@
 		},
 		watch: {
 			user: function (val) {
-				if (typeof val.jwt === 'string') {
-					this.SUBSCRIPTION_TRANSITION({type: 'LOADED', params: {user: val.jwt}});
-					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS', params: {user: val.jwt}});
-					this.WANTLIST_TRANSITION({type: 'FETCH_WANTLIST', params: {user: val.jwt}});
+				if (typeof val.idToken === 'string') {
+					this.SUBSCRIPTION_TRANSITION({type: 'LOADED', params: {user: val.idToken}});
+					this.WATCH_TRANSITION({type: 'RETRIEVE_WATCHERS', params: {user: val.idToken}});
+					this.WANTLIST_TRANSITION({type: 'FETCH_WANTLIST', params: {user: val.idToken}});
 				}
 			}
 		},
@@ -95,7 +95,7 @@
 		flex: 1 1 100%;
 	}
 	.app-container {
-		z-index: 1;
+		z-index: 3;
 		transform: translateX(0);
 		height: 100%;
 		width: 100%;

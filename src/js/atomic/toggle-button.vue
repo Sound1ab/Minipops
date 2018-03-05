@@ -33,6 +33,7 @@
 
 <style lang="scss" type="text/scss">
 	.toggle-button {
+		height: 56px;
 		position: relative;
 		cursor: pointer;
 		color: white;

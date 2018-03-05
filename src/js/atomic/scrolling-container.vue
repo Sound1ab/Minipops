@@ -11,6 +11,15 @@
 </script>
 
 <style lang="scss" type="text/scss">
+	::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
+
+	.-ms-overflow-style {
+		width: 0;
+		height: 0;
+	}
 	.scrolling-container {
 		overflow-y: scroll;
 		-webkit-overflow-scrolling: touch;

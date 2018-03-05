@@ -19,6 +19,21 @@ strong {
 
 input {
 	padding: em(8);
+	&:focus {
+		outline: white auto 0;
+		box-shadow: 0 0 0 white;
+	}
+	// Hide clear on IE
+	&::-ms-clear { width : 0; height: 0; }
+	&::-ms-reveal { width : 0; height: 0; }
+	// Hide autofill icon on ios safari
+	&::-webkit-contacts-auto-fill-button {
+		visibility: hidden;
+		display: none !important;
+		pointer-events: none;
+		position: absolute;
+		right: 0;
+	}
 }
 
 hr {

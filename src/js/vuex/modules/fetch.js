@@ -55,7 +55,7 @@ const actions = {
 		const currentTab = rootState.toggle.state;
 		const keywords = addSlashes(query);
 		console.log('keywords', keywords);
-		const user = rootState.user.user.jwt || '';
+		const user = rootState.user.user.idToken || '';
 		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {
 				if (res.data) {

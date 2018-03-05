@@ -49,10 +49,10 @@
 			}
 		},
 		created () {
-			if (!this.$store.state.user || !this.$store.state.user.user.jwt) {
+			if (!this.$store.state.user || !this.$store.state.user.user.idToken) {
 				this.$store.watch(
 					function (state) {
-						return state.user.user.jwt;
+						return state.user.user.idToken;
 					},
 					this.onLoad,
 					{

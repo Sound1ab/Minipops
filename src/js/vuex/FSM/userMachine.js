@@ -118,7 +118,8 @@ export const userMachine = Machine({
 		successfullyLoggedIn: {
 			onEntry: ['UPDATE_ROUTE', 'STORE_USER_IN_STATE'],
 			on: {
-				SIGN_OUT: 'signingOut'
+				SIGN_OUT: 'signingOut',
+				UPDATE_USER_ATTRIBUTE: 'updatingUserAttribute'
 			}
 		},
 		signingOut: {
@@ -126,6 +127,14 @@ export const userMachine = Machine({
 			on: {
 				SUCCESS: 'waitingForLogin'
 			}
+		},
+		updatingUserAttribute: {
+			onEntry: ['SHOW_LOADING', 'UPDATE_USER_ATTRIBUTE'],
+			on: {
+				SUCCESS: 'successfullyLoggedIn',
+				FAILURE: 'successfullyLoggedIn'
+			},
+			onExit: ['HIDE_LOADING', 'SHOW_CONFIRMATION']
 		}
 	}
 });

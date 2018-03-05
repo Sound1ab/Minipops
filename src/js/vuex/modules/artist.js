@@ -11,7 +11,7 @@ const state = {
 const actions = {
 	ARTIST_TRANSITION: transition.bind(null, artistMachine),
 	FETCH_ARTIST_DATA ({commit, dispatch, rootState}, {params: {query}}) {
-		const user = rootState.user.user.jwt;
+		const user = rootState.user.user.idToken;
 		if (!query || !user) {
 			dispatch('ARTIST_TRANSITION', {type: 'FAILURE'});
 		}
