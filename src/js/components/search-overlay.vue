@@ -26,7 +26,8 @@
 			...mapState({
 				searchQuery: state => state.search.query,
 				state: state => state.search.state,
-				search: state => state.ui.search
+				search: state => state.ui.search,
+				tab: state => state.toggle.state
 			})
 		},
 		methods: {
@@ -41,7 +42,13 @@
 				this.TOGGLE_SEARCH(false);
 			},
 			handleInputChanged (value) {
-				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: value}});
+				this.SEARCH_TRANSITION({
+					type: 'TEXT_INPUT',
+					params: {
+						query: value,
+						tab: this.tab
+					}
+				});
 			}
 		},
 		watch: {

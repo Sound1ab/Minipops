@@ -108,7 +108,8 @@ function refineArtistReleases (artists) {
 			secondaryTitle: lodashGet(el, 'name'),
 			imageUrl: lodashGet(el, 'images[0].url'),
 			releaseDate: lodashGet(el, 'release_date'),
-			spotifyId: lodashGet(el, 'id')
+			spotifyId: lodashGet(el, 'id'),
+			itemUrl: lodashGet(el, 'external_urls.spotify')
 		};
 	});
 }

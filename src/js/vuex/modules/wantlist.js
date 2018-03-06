@@ -2,7 +2,6 @@ import axios from 'axios';
 import {wantlistMachine} from '@/js/vuex/FSM/wantlistMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {WANTLIST} from '@/js/vuex/api';
-import {addSlashes} from '@/js/regex/add-slashes';
 import {filterAlphabetically} from '@/js/vuex/filter';
 
 export function createPromises (api, releaseIds, user) {
@@ -43,8 +42,6 @@ const actions = {
 			spotifyId = '',
 			imageUrl = ''
 		}}) {
-		artist = artist ? addSlashes(artist) : '';
-		album = artist ? addSlashes(album) : '';
 		axios.post(WANTLIST[type], {user, artist, album, spotifyId, imageUrl})
 			.then(() => {
 				dispatch('WANTLIST_TRANSITION', {

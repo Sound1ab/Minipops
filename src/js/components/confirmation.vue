@@ -65,7 +65,7 @@
 			width: em(100);
 			height: em(100);
 			border-radius: 50%;
-			background-color: white;
+			background-color: $primaryColour;
 			border: solid $tertiaryColour 5px;
 			display: flex;
 			justify-content: center;

@@ -31,12 +31,15 @@
 		},
 		methods: {
 			onLoad () {
-				let query;
-				if (!this.$route.params.id) {
-					query = this.$store.state.search.query || '';
-				} else {
-					query = this.$route.params.id.replace(/-/g, ' ');
-				}
+//				let query;
+//				if (!this.$route.params.id) {
+//					query = this.$store.state.search.query || '';
+//				} else {
+//					query = this.$route.params.id.replace(/-/g, ' ');
+//				}
+				let artist = this.$route.params.artist;
+				let query = decodeURIComponent(artist);
+				console.log(query);
 				if (!query) {
 					return;
 				}

@@ -116,7 +116,13 @@
 					this.pushRelatedArtists();
 					return;
 				}
-				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query}});
+				this.SEARCH_TRANSITION({
+					type: 'TEXT_INPUT',
+					params: {
+						query,
+						tab: this.tab
+					}
+				});
 			},
 			handleWatch (index) {
 				const {album, artist, spotifyId} = this.items[index];

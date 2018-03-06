@@ -2,9 +2,9 @@ import {Machine} from 'xstate';
 
 const id = 'Fetch';
 
-const conditionalCheck = function conditionalCheck (extState, {params: {query = '', routeEnteringQuery = ''}}) {
-	return (query && query.length > 0 && query !== routeEnteringQuery);
-};
+// const conditionalCheck = function conditionalCheck (extState, {params: {query = '', routeEnteringQuery = ''}}) {
+// 	return (query && query.length > 0 && query !== routeEnteringQuery);
+// };
 
 export const fetchMachine = Machine({
 	id,
@@ -13,11 +13,7 @@ export const fetchMachine = Machine({
 	states: {
 		idle: {
 			on: {
-				FETCH_DATA_REQUEST: {
-					creatingCancelToken: {
-						cond: conditionalCheck
-					}
-				}
+				FETCH_DATA_REQUEST: 'creatingCancelToken'
 			}
 		},
 		creatingCancelToken: {

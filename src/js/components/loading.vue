@@ -2,14 +2,15 @@
 	<transition name="fade" mode="out-in">
 		<div class="loading" v-if="loading">
 			<spin360-infinite :rotate="true">
-				<svgicon
-					name="loading"
-					class="loading__icon"
-					color="#E24347"
-					width="100"
-					height="100"
-				>
-				</svgicon>
+				<!--<svgicon-->
+					<!--name="loading"-->
+					<!--class="loading__icon"-->
+					<!--color="#E24347"-->
+					<!--width="100"-->
+					<!--height="100"-->
+				<!--&gt;-->
+				<!--</svgicon>-->
+				<img :src="require('@/assets/images/recollect-icon-loading.png')" width="100" height="100" />
 			</spin360-infinite>
 		</div>
 	</transition>

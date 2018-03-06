@@ -1,50 +1,42 @@
 <template>
-	<scrolling-container class="item-view" id="scrolling-container">
-		<transition name="fade-up" mode="out-in">
-			<itemlist :key="tab" v-if="state !== 'fetchingData'"></itemlist>
-		</transition>
-	</scrolling-container>
+	<div class="item-view">
+		<average-price></average-price>
+		<scrolling-container class="item-view__scrolling-container" id="scrolling-container">
+			<transition name="fade-up" mode="out-in">
+				<itemlist :key="tab" v-if="state !== 'fetchingData'"></itemlist>
+			</transition>
+		</scrolling-container>
+	</div>
 </template>
 
 <script>
 	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	import Itemlist from '@/js/components/itemlist';
-	import {mapState, mapActions} from 'vuex';
-
+	import {mapState} from 'vuex';
+	import AveragePrice from '@/js/components/average-price';
 	export default {
 		name: 'item-view',
 		components: {
 			ScrollingContainer,
-			Itemlist
+			Itemlist,
+			AveragePrice
 		},
 		computed: {
 			...mapState({
 				state: state => state.fetch.state,
-				tab: state => state.toggle.state
+				tab: state => state.toggle.state,
+				query: state => state.search.query,
+				user: state => state.user.user
 			})
 		},
 		methods: {
-			...mapActions([
-				'SEARCH_TRANSITION'
-			]),
-			replaceHyphensWithSpaces (str) {
-				return str.replace('-', ' ');
+			handleArtistReleasesRoute (spotifyId) {
+				this.dispatchTransition(spotifyId);
 			},
-			retrieveRouteEnteringQuery (routeEntering) {
-				return this.$store.state.fetch[routeEntering].query;
+			handleAllOtherRoutes (query) {
+				this.dispatchTransition(query);
 			},
-			handleArtistReleasesRoute (artist, spotifyId) {
-				const searchQuery = this.replaceHyphensWithSpaces(artist);
-				const query = spotifyId;
-				const routeEnteringQuery = this.retrieveRouteEnteringQuery('artist-releases');
-				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query: searchQuery}});
-				this.dispatchTransition(query, routeEnteringQuery);
-			},
-			handleAllOtherRoutes (query, tab) {
-				const routeEnteringQuery = this.retrieveRouteEnteringQuery(tab);
-				this.dispatchTransition(query, routeEnteringQuery);
-			},
-			dispatchTransition (query, routeEnteringQuery) {
+			dispatchTransition (query) {
 				if (!query) {
 					return;
 				}
@@ -52,22 +44,22 @@
 					type: 'FETCH_DATA_REQUEST',
 					params: {
 						query,
-						routeEnteringQuery
+						tab: this.tab,
+						user: this.user.idToken
 					}
 				});
 			},
 			onLoad () {
-				const query = this.$store.state.search.query;
-				const artist = this.$route.params.artist;
+				const query = this.query;
 				const spotifyId = this.$route.params.spotifyId;
 				const tab = this.tab;
 				if (tab === 'login') {
 					return;
 				}
-				if (artist && spotifyId) {
-					this.handleArtistReleasesRoute(artist, spotifyId);
+				if (spotifyId) {
+					this.handleArtistReleasesRoute(spotifyId);
 				} else {
-					this.handleAllOtherRoutes(query, tab);
+					this.handleAllOtherRoutes(query);
 				}
 			}
 		},
@@ -86,5 +78,12 @@
 		//top: -40px;
 		//margin-bottom: -40px;
 		background: linear-gradient(to bottom, $secondaryColour 0%, darken( $secondaryColour, 15% ) 100%);
+		&__scrolling-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>

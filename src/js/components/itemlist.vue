@@ -28,8 +28,6 @@
 	import LargeItem from '@/js/components/large-item';
 	import SwipeToReveal from '@/js/components/swipe-to-reveal';
 	import {mapState, mapActions, mapGetters} from 'vuex';
-	import {lowerCaseAndReplaceSpace} from '@/js/filters/lowerCaseAndReplaceSpace';
-	import {removePunctuation} from '@/js/regex/removePunctuation';
 	export default {
 		name: 'Itemlist',
 		components: {
@@ -132,28 +130,18 @@
 				if (this.tab === 'discovery') {
 					this.pushArtistRoute(this.title(index), this.items[index].spotifyId);
 					return;
-				} else if (this.tab === 'artist-releases') {
-					const query = this.title(index);
-					this.pushDiscogs(query);
-					return;
 				}
 				let win = window.open(this.items[index].itemUrl, '_blank');
 				win.focus();
 			},
 			pushArtistRoute (artist, spotifyId) {
-				const artistPath = lowerCaseAndReplaceSpace(removePunctuation(artist), '-');
+				const encodeArtistPath = encodeURIComponent(artist);
 				this.$router.push({
 					name: 'artist-releases',
 					params: {
-						artist: artistPath,
+						artist: encodeArtistPath,
 						spotifyId
 					}
-				});
-			},
-			pushDiscogs (query) {
-				this.SEARCH_TRANSITION({type: 'UPDATE_SEARCH', params: {query}});
-				this.$router.push({
-					path: `/discogs`
 				});
 			}
 		}

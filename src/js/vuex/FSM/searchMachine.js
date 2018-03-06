@@ -7,17 +7,6 @@ export const searchMachine = Machine({
 	initial: 'searching',
 	strict: true,
 	states: {
-		// closed: {
-		// 	on: {
-		// 		SEARCH_SELECTED: 'searching',
-		// 		UPDATE_SEARCH: {
-		// 			closed: {
-		// 				actions: ['UPDATE_SEARCH']
-		// 			}
-		// 		},
-		// 		TEXT_INPUT: 'searching.typing'
-		// 	}
-		// },
 		searching: {
 			initial: 'searchReady',
 			states: {
@@ -35,7 +24,6 @@ export const searchMachine = Machine({
 				}
 			},
 			on: {
-				CLOSE: 'closed',
 				TIMER_COUNTDOWN_PASSED: 'checkingTab',
 				UPDATE_SEARCH: {
 					searching: {

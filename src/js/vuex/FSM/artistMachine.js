@@ -9,11 +9,7 @@ export const artistMachine = Machine({
 	states: {
 		idle: {
 			on: {
-				LOADED: {
-					fetchingArtistData: {
-						actions: ['UPDATE_SEARCH']
-					}
-				}
+				LOADED: 'fetchingArtistData'
 			}
 		},
 		fetchingArtistData: {

@@ -1,5 +1,6 @@
 import {searchMachine} from '@/js/vuex/FSM/searchMachine';
 import {transition} from '@/js/vuex/fsm-transition';
+import Router from '@/js/router/index.js';
 
 let timeout;
 
@@ -11,33 +12,46 @@ const state = {
 
 const actions = {
 	SEARCH_TRANSITION: transition.bind(null, searchMachine),
-	START_TIMER ({dispatch}, transitionInfo) {
-		const {params: {query = '', disableFetch = false}} = transitionInfo;
+	START_TIMER ({dispatch}, {params: {query = '', disableFetch = false, tab}}) {
 		if (!query || disableFetch) {
 			dispatch('SEARCH_TRANSITION', {type: 'TEXT_INPUT_EMPTY'});
 			return;
 		}
 		clearTimeout(timeout);
 		timeout = setTimeout(() => {
-			dispatch('SEARCH_TRANSITION', {type: 'TIMER_COUNTDOWN_PASSED'});
+			dispatch('SEARCH_TRANSITION', {
+				type: 'TIMER_COUNTDOWN_PASSED',
+				params: {
+					query,
+					tab
+				}
+			});
 		}, 500);
 	},
-	UPDATE_SEARCH ({commit}, transitionInfo) {
-		const {params: {query = ''}} = transitionInfo;
+	UPDATE_SEARCH ({commit}, {params: {query = ''}}) {
 		commit('updateSearch', query);
 	},
-	CHECKING_TAB ({dispatch}) {
-		dispatch('SEARCH_TRANSITION', {type: 'TAB_CHECKED'});
+	CHECKING_TAB ({dispatch}, {params: {query, tab}}) {
+		if (tab === 'artist-releases') {
+			Router.push({path: '/discovery'});
+			tab = 'discovery';
+		}
+		dispatch('SEARCH_TRANSITION', {
+			type: 'TAB_CHECKED',
+			params: {
+				query,
+				tab
+			}
+		});
 	},
-	DISPATCHING_SEARCH ({dispatch, state, rootState}) {
-		const query = state.query;
-		const tab = rootState.toggle.state;
-		const routeEnteringQuery = rootState.fetch[tab].query;
+	DISPATCHING_SEARCH ({dispatch, rootState}, {params: {query, tab}}) {
+		const user = rootState.user.user.idToken;
 		dispatch('FETCH_TRANSITION', {
 			type: 'FETCH_DATA_REQUEST',
 			params: {
 				query,
-				routeEnteringQuery
+				tab,
+				user
 			}
 		});
 		dispatch('SEARCH_TRANSITION', {type: 'SEARCH_DISPATCHED'});

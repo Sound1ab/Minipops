@@ -2,7 +2,7 @@ import axios from 'axios';
 import {fetchMachine} from '@/js/vuex/FSM/fetchMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {ITEMS} from '@/js/vuex/api';
-import {addSlashes} from '@/js/regex/add-slashes';
+import {removeBrackets} from '@/js/regex/remove-brackets';
 import {normalizer} from '@/js/vuex/normalizer';
 import {filter, filterKeys} from '@/js/vuex/filter';
 import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
@@ -51,19 +51,16 @@ const actions = {
 			state.cancelToken.cancel();
 		}
 	},
-	FETCH_DATA ({commit, rootState, dispatch, state}, {params: {query}}) {
-		const currentTab = rootState.toggle.state;
-		const keywords = addSlashes(query);
-		console.log('keywords', keywords);
-		const user = rootState.user.user.idToken || '';
-		axios.get(ITEMS[currentTab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
+	FETCH_DATA ({commit, dispatch, state}, {params: {query, tab, user}}) {
+		const keywords = encodeURIComponent(removeBrackets(query));
+		axios.get(ITEMS[tab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {
 				if (res.data) {
-					let data = normalizer[currentTab](res.data);
-					commit('updateItems', {type: currentTab, data, query: keywords});
+					let data = normalizer[tab](res.data);
+					commit('updateItems', {type: tab, data, query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});
 				} else {
-					commit('updateItems', {type: currentTab, data: [], query: keywords});
+					commit('updateItems', {type: tab, data: [], query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'FAILURE'});
 				}
 			})
@@ -73,7 +70,7 @@ const actions = {
 				} else {
 					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});
 				}
-				commit('updateItems', {type: currentTab, data: [], query: keywords});
+				commit('updateItems', {type: tab, data: [], query: keywords});
 			});
 	},
 	SORT ({commit}, payload) {
@@ -107,12 +104,14 @@ const getters = {
 	sortItems: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
 		if (state[tab] && state[tab].items && state[tab].items.length > 0) {
+			console.log(state[tab].items.length);
 			return filter[state.sort](state[tab].items);
 		}
 	},
 	averagePrice: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		if (!state[tab] || state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'discovery') {
+		console.log('tab', tab);
+		if (!state[tab] || !state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'discovery') {
 			return;
 		}
 		const query = rootState.search.query.split(' ');

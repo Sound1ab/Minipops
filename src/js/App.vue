@@ -11,7 +11,7 @@
 			</transition>
 			<heading-bar></heading-bar>
 			<toggle></toggle>
-			<average-price></average-price>
+			<!--<average-price></average-price>-->
 			<search-overlay></search-overlay>
 			<router-view class="router-view"/>
 		</span>

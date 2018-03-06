@@ -1,13 +1,14 @@
 <template>
 	<transition name="fade-up" mode="out-in">
 		<div
+			:key="tab"
 			v-if="averagePrice && tab !== 'discovery' && tab !== 'artist-releases'"
 			class="average-price"
 		>
 			<tooltip
 				class="average-price__tooltip"
 				v-if="tooltip"
-				:nudge="'56px'"
+				:nudge="'-46px'"
 				:size="'16px'"
 				:trianglePosition="'bottom'"
 			>
@@ -59,15 +60,15 @@
 	.average-price {
 		opacity: 1;
 		position: absolute;
-		bottom: 0;
-		right: 0;
+		top: 0;
+		left: 0;
 		z-index: 2;
 		margin: em(16);
 		&__tooltip {
 			position: absolute!important;
 			width: em(180);
 			bottom: 100%;
-			right: 0;
+			left: 0px;
 			//transform: translateY(-116%);
 		}
 		&__inner {
