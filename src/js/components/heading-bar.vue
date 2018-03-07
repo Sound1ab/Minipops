@@ -95,7 +95,7 @@
 		display: flex;
 		padding: em(16);
 		position: relative;
-		background-color: transparent;
+		background-color: $primaryColour;
 		align-items: center;
 		&__menu {
 			position: relative;

@@ -123,7 +123,7 @@ export const userMachine = Machine({
 			}
 		},
 		signingOut: {
-			onEntry: ['REMOVE_USER_FROM_LOCAL_STORE'],
+			onEntry: ['REMOVE_USER_FROM_LOCAL_STORE', 'CLEAR_ALL'],
 			on: {
 				SUCCESS: 'waitingForLogin'
 			}

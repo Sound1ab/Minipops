@@ -1,27 +1,28 @@
 <template>
-	<transition name="fade-up" mode="out-in">
-		<div
-			:key="tab"
-			v-if="averagePrice && tab !== 'discovery' && tab !== 'artist-releases'"
-			class="average-price"
+	<div
+		:key="tab"
+		v-if="averagePrice && tab !== 'discovery' && tab !== 'artist-releases'"
+		class="average-price"
+		:class="{'average-price--move': move}"
+	>
+		<tooltip
+			class="average-price__tooltip"
+			v-if="tooltip"
+			:nudge="'46px'"
+			:size="'16px'"
+			:trianglePosition="'bottom'"
 		>
-			<tooltip
-				class="average-price__tooltip"
-				v-if="tooltip"
-				:nudge="'-46px'"
-				:size="'16px'"
-				:trianglePosition="'bottom'"
-			>
-				<span>Average price</span>
-			</tooltip>
-			<div
-				class="average-price__inner"
-				@click="handleClick"
-			>
-				<h2 class="average-price__heading delta">£{{averagePrice}}</h2>
-			</div>
+			<span>Average price</span>
+		</tooltip>
+		<div
+			class="average-price__inner"
+			@mouseleave="tooltip = false"
+			@mouseover="tooltip = true"
+			@click="move = !move"
+		>
+			<h2 class="average-price__heading delta">£{{averagePrice}}</h2>
 		</div>
-	</transition>
+	</div>
 </template>
 
 <script>
@@ -36,7 +37,8 @@
 		},
 		data () {
 			return {
-				tooltip: false
+				tooltip: false,
+				move: false
 			};
 		},
 		computed: {
@@ -51,6 +53,9 @@
 		methods: {
 			handleClick () {
 				this.tooltip = !this.tooltip;
+			},
+			handleHover () {
+				this.tooltip = !this.tooltip;
 			}
 		}
 	};
@@ -60,15 +65,19 @@
 	.average-price {
 		opacity: 1;
 		position: absolute;
-		top: 0;
-		left: 0;
+		bottom: 0;
+		right: 0;
 		z-index: 2;
 		margin: em(16);
+		transition: bottom .5s;
+		&--move {
+			bottom: em(94);
+		}
 		&__tooltip {
 			position: absolute!important;
 			width: em(180);
 			bottom: 100%;
-			left: 0px;
+			right: 0px;
 			//transform: translateY(-116%);
 		}
 		&__inner {
@@ -85,6 +94,7 @@
 		}
 		&__heading {
 			margin: 0;
+			pointer-events: none;
 		}
 	}
 </style>

@@ -1,12 +1,12 @@
 <template>
-	<div class="item-view">
-		<average-price></average-price>
-		<scrolling-container class="item-view__scrolling-container" id="scrolling-container">
-			<transition name="fade-up" mode="out-in">
-				<itemlist :key="tab" v-if="state !== 'fetchingData'"></itemlist>
-			</transition>
-		</scrolling-container>
-	</div>
+	<transition name="fade-up" mode="out-in">
+		<div class="item-view" :key="tab" v-if="state !== 'fetchingData'">
+			<average-price></average-price>
+			<scrolling-container class="item-view__scrolling-container" id="scrolling-container">
+					<itemlist></itemlist>
+			</scrolling-container>
+		</div>
+	</transition>
 </template>
 
 <script>
@@ -43,6 +43,7 @@
 				this.$store.dispatch('FETCH_TRANSITION', {
 					type: 'FETCH_DATA_REQUEST',
 					params: {
+						type: 'TAB_DISPATCH',
 						query,
 						tab: this.tab,
 						user: this.user.idToken
@@ -77,7 +78,7 @@
 		position: relative;
 		//top: -40px;
 		//margin-bottom: -40px;
-		background: linear-gradient(to bottom, $secondaryColour 0%, darken( $secondaryColour, 15% ) 100%);
+		//background: linear-gradient(to bottom, $secondaryColour 0%, darken( $secondaryColour, 15% ) 100%);
 		&__scrolling-container {
 			position: absolute;
 			top: 0;

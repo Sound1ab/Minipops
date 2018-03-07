@@ -1,15 +1,18 @@
 <template>
-	<div class="login-view">
-		<login-box></login-box>
-	</div>
+	<scrolling-container class="login-view">
+		<img class="login-view__icon" :src="require('@/assets/images/recollect-icon-loading.png')" />
+		<login-box class="login-view__login"></login-box>
+	</scrolling-container>
 </template>
 
 <script>
 	import LoginBox from '@/js/components/login-box';
+	import ScrollingContainer from '@/js/atomic/scrolling-container';
 	export default {
 		name: 'login-view',
 		components: {
-			LoginBox
+			LoginBox,
+			ScrollingContainer
 		}
 	};
 </script>
@@ -24,8 +27,18 @@
 		color: white;
 		z-index: 2;
 		background: linear-gradient(to bottom, $primaryColour 0%, darken( $primaryColour, 15% ) 100%);
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		//display: flex;
+		//justify-content: center;
+		//align-items: center;
+		//flex-direction: column;
+		&__icon {
+			width: 144px;
+			height: 144px;
+			margin: em(16) auto;
+		}
+		&__login {
+			margin: em(16) auto;
+			margin-bottom: em(72);
+		}
 	}
 </style>

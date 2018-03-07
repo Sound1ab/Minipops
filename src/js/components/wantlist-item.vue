@@ -5,7 +5,7 @@
 	>
 		<background-image :key="imageUrl" class="wantlist-item__background-image" :image="imageUrl"></background-image>
 		<div class="wantlist-item__copy-outer">
-			<h1 class="wantlist-item__title delta">{{artist}} {{album}}</h1>
+			<h1 class="delta wantlist-item__title">{{artist}} {{album}}</h1>
 		</div>
 		<div class="wantlist-item__drag">
 			<svgicon
@@ -43,7 +43,7 @@
 	.wantlist-item {
 		position: relative;
 		width: 100%;
-		background-color: white;
+		background-color: #f4f3f4;
 		padding: em(8);
 		height: em(56);
 		z-index: 1;
@@ -72,9 +72,9 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			font-weight: bold;
-			font-size: 12px;
+			font-size: 12px!important;
 			@include mqMin(xs) {
-				font-size: 14px;
+				font-size: 14px!important;
 			}
 		}
 		&__drag {

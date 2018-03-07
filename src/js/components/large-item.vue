@@ -26,6 +26,7 @@
 				</star>
 				<background-image
 					class="large-item__background-image"
+					:border-radius="[5, 5, 0, 0]"
 					:image="imageUrl"
 				></background-image>
 				<div class="large-item__copy-outer">
@@ -159,6 +160,7 @@
 		&__background-image {
 			flex: 0 0 70%;
 			width: 100%;
+			border-radius: 5px;
 		}
 		&__copy-outer {
 			flex: 1 1 100%;
@@ -166,7 +168,7 @@
 			position: relative;
 		}
 		&__heading {
-			font-size: 16px;
+			font-size: 14px;
 			font-weight: bold;
 			white-space: nowrap;
 			overflow: hidden;
@@ -174,15 +176,17 @@
 		}
 		&__time {
 			display: block;
+			font-size: 14px;
 		}
 		&__bids {
 			display: block;
 			color: #545454;
+			font-size: 12px;
 		}
 		&__postage {
 			display: block;
 			color: #959595;
-			font-size: 14px;
+			font-size: 12px;
 		}
 		&__price-outer {
 			position: absolute;

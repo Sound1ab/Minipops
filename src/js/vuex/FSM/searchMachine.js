@@ -24,18 +24,12 @@ export const searchMachine = Machine({
 				}
 			},
 			on: {
-				TIMER_COUNTDOWN_PASSED: 'checkingTab',
+				TIMER_COUNTDOWN_PASSED: 'dispatchingSearch',
 				UPDATE_SEARCH: {
 					searching: {
 						actions: ['UPDATE_SEARCH']
 					}
 				}
-			}
-		},
-		checkingTab: {
-			onEntry: ['CHECKING_TAB'],
-			on: {
-				TAB_CHECKED: 'dispatchingSearch'
 			}
 		},
 		dispatchingSearch: {

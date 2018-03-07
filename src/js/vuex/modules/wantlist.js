@@ -13,11 +13,15 @@ export function createPromises (api, releaseIds, user) {
 	});
 }
 
-const state = {
-	state: wantlistMachine.initial,
-	userId: '',
-	items: []
-};
+function initialState () {
+	return {
+		state: wantlistMachine.initial,
+		userId: '',
+		items: []
+	};
+}
+
+const state = initialState();
 
 const actions = {
 	WANTLIST_TRANSITION: transition.bind(null, wantlistMachine),
@@ -78,6 +82,10 @@ const mutations = {
 	},
 	updateAuthPref (state, payload) {
 		state.authPref = payload;
+	},
+	resetStateData (state) {
+		let newState = initialState();
+		state = Object.assign(state, newState);
 	}
 };
 

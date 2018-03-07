@@ -96,10 +96,6 @@
 			title (index) {
 				return `${this.items[index].title} ${this.items[index].secondaryTitle ? this.items[index].secondaryTitle : ''}`.trim();
 			},
-			search (index) {
-				this.SEARCH_TRANSITION({type: 'SEARCH_SELECTED'});
-				this.SEARCH_TRANSITION({type: 'TEXT_INPUT', params: {query: this.title(index)}});
-			},
 			handleAdd ({artist, album, spotifyId, imageUrl}) {
 				this.WANTLIST_TRANSITION({
 					type: 'ADD_TO_WANTLIST',

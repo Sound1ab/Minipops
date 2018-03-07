@@ -53,6 +53,10 @@
 		}
 		&__heading {
 			font-weight: bold;
+			font-size: 14px;
+			@include mqMin(xs) {
+				font-size: 16px;
+			}
 		}
 	}
 </style>

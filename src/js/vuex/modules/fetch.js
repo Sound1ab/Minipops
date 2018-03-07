@@ -7,36 +7,41 @@ import {normalizer} from '@/js/vuex/normalizer';
 import {filter, filterKeys} from '@/js/vuex/filter';
 import {returnAllPhrasesContainingPhrase} from '@/js/regex/return-all-phrases-containing-phrase';
 import {toFixed} from '@/js/regex/to-fixed';
+import Router from '@/js/router/index.js';
 
-const state = {
-	state: fetchMachine.initial,
-	cancelToken: null,
-	current: {
-		items: [],
-		query: ''
-	},
-	completed: {
-		items: [],
-		query: ''
-	},
-	discogs: {
-		items: [],
-		query: ''
-	},
-	artist: {
-		items: [],
-		query: ''
-	},
-	discovery: {
-		items: [],
-		query: ''
-	},
-	'artist-releases': {
-		items: [],
-		query: ''
-	},
-	sort: filterKeys.priceLowHigh
-};
+function initialState () {
+	return {
+		state: fetchMachine.initial,
+		cancelToken: null,
+		current: {
+			items: [],
+			query: ''
+		},
+		completed: {
+			items: [],
+			query: ''
+		},
+		discogs: {
+			items: [],
+			query: ''
+		},
+		artist: {
+			items: [],
+			query: ''
+		},
+		discovery: {
+			items: [],
+			query: ''
+		},
+		'artist-releases': {
+			items: [],
+			query: ''
+		},
+		sort: filterKeys.priceLowHigh
+	};
+}
+
+const state = initialState();
 
 const actions = {
 	FETCH_TRANSITION: transition.bind(null, fetchMachine),
@@ -50,6 +55,21 @@ const actions = {
 		if (state.cancelToken) {
 			state.cancelToken.cancel();
 		}
+	},
+	CHECKING_TAB ({dispatch}, {params: {type, query, tab, user}}) {
+		console.log(type);
+		if (tab === 'artist-releases' && (type === 'SEARCH_DISPATCH' || type === 'WANTLIST_DISPATCH')) {
+			Router.push({path: '/discovery'});
+			tab = 'discovery';
+		}
+		dispatch('FETCH_TRANSITION', {
+			type: 'TAB_CHECKED',
+			params: {
+				query,
+				tab,
+				user
+			}
+		});
 	},
 	FETCH_DATA ({commit, dispatch, state}, {params: {query, tab, user}}) {
 		const keywords = encodeURIComponent(removeBrackets(query));
@@ -91,6 +111,10 @@ const mutations = {
 	},
 	sort (state, payload) {
 		state.sort = payload;
+	},
+	resetStateData (state) {
+		let newState = initialState();
+		state = Object.assign(state, newState);
 	}
 };
 
@@ -114,7 +138,8 @@ const getters = {
 		if (!state[tab] || !state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'discovery') {
 			return;
 		}
-		const query = rootState.search.query.split(' ');
+		const queryWithBracketsRemoved = removeBrackets(rootState.search.query);
+		const query = queryWithBracketsRemoved.split(' ');
 		const regex = returnAllPhrasesContainingPhrase(query);
 		const items = state[tab].items.filter(el => {
 			return (el.title).search(regex) >= 0;

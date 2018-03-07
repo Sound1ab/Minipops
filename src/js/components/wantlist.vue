@@ -42,42 +42,43 @@
 				confirmationMessage: state => state.ui.confirmation
 			}),
 			...mapGetters([
-				'wantlistIds'
+				'wantlistIds',
+				'subscriptionReady'
 			]),
 			swipeToRevealConfig () {
-				return {
-					translateX: 144,
-					boundary: 72,
-					buttons: [
-						{
-							states: {
-								watch: {
-									emit: 'watch',
-									heading: 'Watch eBay items',
-									styles: {
-										color: 'white',
-										fontSize: '12px'
-									}
-								},
-								removeWatch: {
-									emit: 'removeWatch',
-									heading: 'Remove watcher',
-									styles: {
-										color: 'white',
-										fontSize: '12px'
-									}
-								}
+				const watch = this.subscriptionReady ? {
+					states: {
+						watch: {
+							emit: 'watch',
+							heading: 'Watch eBay items',
+							styles: {
+								color: 'white',
+								fontSize: '12px'
 							}
 						},
-						{
-							emit: 'remove',
-							heading: 'Remove',
+						removeWatch: {
+							emit: 'removeWatch',
+							heading: 'Remove watcher',
 							styles: {
 								color: 'white',
 								fontSize: '12px'
 							}
 						}
-					]
+					}
+				} : null;
+				const remove = {
+					emit: 'remove',
+					heading: 'Remove',
+					styles: {
+						color: 'white',
+						fontSize: '12px'
+					}
+				};
+				const buttons = [watch, remove].filter(el => el);
+				return {
+					translateX: buttons.length > 1 ? 144 : 72,
+					boundary: 72,
+					buttons
 				};
 			}
 		},
@@ -87,11 +88,6 @@
 				'WANTLIST_TRANSITION',
 				'WATCH_TRANSITION'
 			]),
-			pushRelatedArtists () {
-				this.$router.push({
-					path: `/discovery`
-				});
-			},
 			handleRemove (index) {
 				const {artist, album, spotifyId, imageUrl} = this.items[index];
 				this.WANTLIST_TRANSITION({
@@ -112,15 +108,13 @@
 			handleClick (index) {
 				const {artist, album} = this.items[index];
 				const query = `${artist} ${album}`;
-				if (this.tab === 'artist-releases') {
-					this.pushRelatedArtists();
-					return;
-				}
 				this.SEARCH_TRANSITION({
 					type: 'TEXT_INPUT',
 					params: {
+						type: 'WANTLIST_DISPATCH',
 						query,
-						tab: this.tab
+						tab: this.tab,
+						user: this.user
 					}
 				});
 			},
@@ -151,9 +145,3 @@
 		}
 	};
 </script>
-
-<style lang="scss" type="text/scss">
-	.wantlist {
-
-	}
-</style>

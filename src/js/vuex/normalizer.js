@@ -43,7 +43,7 @@ export function extractReleaseId (wantlist) {
 export function refineEbaylist (data) {
 	let refined = data.map(el => {
 		const title = lodashGet(el, 'title[0]') || '';
-		const imageUrl = lodashGet(el, 'galleryURL[0]') || '';
+		const imageUrl = lodashGet(el, 'pictureURLLarge[0]') || '';
 		const itemUrl = lodashGet(el, 'viewItemURL[0]') || '';
 		const price = lodashGet(el, 'sellingStatus[0].currentPrice[0].__value__') || 0;
 		const endTime = lodashGet(el, 'listingInfo[0].endTime[0]') || '';

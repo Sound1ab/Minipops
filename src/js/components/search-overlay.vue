@@ -27,7 +27,8 @@
 				searchQuery: state => state.search.query,
 				state: state => state.search.state,
 				search: state => state.ui.search,
-				tab: state => state.toggle.state
+				tab: state => state.toggle.state,
+				user: state => state.user.user
 			})
 		},
 		methods: {
@@ -45,8 +46,10 @@
 				this.SEARCH_TRANSITION({
 					type: 'TEXT_INPUT',
 					params: {
+						type: 'SEARCH_DISPATCH',
 						query: value,
-						tab: this.tab
+						tab: this.tab,
+						user: this.user.idToken
 					}
 				});
 			}

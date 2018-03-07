@@ -21,7 +21,7 @@
 			></user-profile-icon>
 			<main-heading
 				class="user-profile__username"
-				:text="'Sound1ab'"
+				:text="user.username"
 				:color="'black'"
 				:className="'gamma'"
 			>

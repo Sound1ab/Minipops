@@ -87,10 +87,10 @@
 		position: relative;
 		width: 100%;
 		z-index: 1;
-		background-color: transparent;
+		background-color: $primaryColour;
 		display: flex;
 		justify-content: space-between;
-		box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
+		//box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
 		&__button-outer {
 			display: inline-block;
 		}

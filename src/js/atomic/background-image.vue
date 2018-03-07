@@ -3,6 +3,7 @@
 		<div
 			v-if="image && progressiveImage"
 			class="background-image__image"
+			:style="{borderRadius: borderRadiusComputed}"
 			v-progressive-image="{
 					src: image,
 					placeholder: requireImage('prog-image.png'),
@@ -25,6 +26,7 @@
 		name: 'background-image',
 		props: {
 			image: VueTypes.string.def(''),
+			borderRadius: VueTypes.array.def([0, 0, 0, 0]),
 			gradient: VueTypes.bool.def(false),
 			progressiveImage: VueTypes.bool.def(true)
 		},
@@ -33,6 +35,11 @@
 				return {
 					backgroundImage: `url('${this.image}')`
 				};
+			},
+			borderRadiusComputed () {
+				return this.borderRadius.reduce((acc, el) => {
+					return acc + `${el}px `;
+				}, '');
 			}
 		}
 	};

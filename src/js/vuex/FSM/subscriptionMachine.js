@@ -50,9 +50,12 @@ export const subscriptionMachine = Machine({
 		updatingSubscriptionOnServer: {
 			onEntry: ['UPDATE_SUBSCRIPTION_ON_SERVER'],
 			on: {
-				SUCCESS: 'idle',
+				SUCCESS: 'subscriptionReady',
 				FAILURE: 'idle'
 			}
+		},
+		subscriptionReady: {
+			onEntry: ['SUBSCRIPTION_READY']
 		}
 	}
 });

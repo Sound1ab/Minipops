@@ -23,6 +23,7 @@ function createClass (url) {
 		top: 0;
 		left: 0;
 		z-index: inherit;
+		border-radius: inherit;
 		display: block;
 		background-image: url('${url}');
 		background-size: inherit;

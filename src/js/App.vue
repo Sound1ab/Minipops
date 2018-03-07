@@ -99,7 +99,7 @@
 		transform: translateX(0);
 		height: 100%;
 		width: 100%;
-		background: linear-gradient(to bottom, $primaryColour 0%, darken($primaryColour, 30%) 100%);
+		background: linear-gradient(to bottom, lighten($primaryColour, 0%) 0%, lighten($primaryColour, 10%) 100%);
 		transition: transform .5s;
 		display: flex;
 		flex-direction: column;

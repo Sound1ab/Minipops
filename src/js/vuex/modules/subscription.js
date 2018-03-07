@@ -107,16 +107,17 @@ const actions = {
 			});
 	},
 	UPDATE_SUBSCRIPTION_ON_SERVER ({dispatch}, {params: {type, subscription, user}}) {
+		console.log('update on server');
 		axios.post(SUBSCRIBE[type], {subscription, user})
-			.then(response => {
-				if (!response.ok) {
-					dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
-				}
+			.then(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS'});
 			})
 			.catch(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			});
+	},
+	SUBSCRIPTION_READY () {
+		console.log('subscription ready');
 	}
 };
 
@@ -129,8 +130,15 @@ const mutations = {
 	}
 };
 
+const getters = {
+	subscriptionReady (state) {
+		return state.state === 'subscriptionReady';
+	}
+};
+
 export default {
 	state,
 	mutations,
-	actions
+	actions,
+	getters
 };

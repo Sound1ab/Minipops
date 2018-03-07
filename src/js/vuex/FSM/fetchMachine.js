@@ -19,7 +19,13 @@ export const fetchMachine = Machine({
 		creatingCancelToken: {
 			onEntry: ['CREATE_CANCEL_TOKEN'],
 			on: {
-				TOKEN_CREATED: 'fetchingData'
+				TOKEN_CREATED: 'checkingTab'
+			}
+		},
+		checkingTab: {
+			onEntry: ['CHECKING_TAB'],
+			on: {
+				TAB_CHECKED: 'fetchingData'
 			}
 		},
 		fetchingData: {

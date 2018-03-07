@@ -76,30 +76,20 @@
 	}
 }
 
-// slide-in slide-out
-.slide-in-slide-out-enter-active {
-	animation: slide-in .5s;
+// Fade up
+.slide-sideways-enter-active {
+	animation: slide-sideways .25s;
 }
-.slide-in-slide-out-leave-active {
-	animation: slide-out .5s;
+.slide-sideways-leave-active {
+	animation: slide-sideways .25s reverse;
 }
-@keyframes slide-in {
+@keyframes slide-sideways {
 	0% {
 		opacity: 0;
-		transform: translateX(-100px);
+		transform: translateX(10px);
 	}
 	100% {
 		opacity: 1;
 		transform: translateX(0);
-	}
-}
-@keyframes slide-out {
-	0% {
-		opacity: 1;
-		transform: translateX(0);
-	}
-	100% {
-		opacity: 0;
-		transform: translateX(100px);
 	}
 }

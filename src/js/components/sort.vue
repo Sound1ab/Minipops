@@ -93,7 +93,7 @@
 			position: absolute!important;
 			width: em(180);
 			top: 100%;
-			right: 0;
+			right: -19px;
 		}
 		&__list-item {
 			margin-bottom: em(8);
