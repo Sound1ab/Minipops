@@ -75,7 +75,7 @@ const actions = {
 		const keywords = encodeURIComponent(removeBrackets(query));
 		axios.get(ITEMS[tab], {params: {keywords, user}, cancelToken: state.cancelToken.token})
 			.then(res => {
-				if (res.data) {
+				if (res.data && res.data.length > 0) {
 					let data = normalizer[tab](res.data);
 					commit('updateItems', {type: tab, data, query: keywords});
 					dispatch('FETCH_TRANSITION', {type: 'SUCCESS'});

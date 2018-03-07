@@ -168,15 +168,21 @@
 			position: relative;
 		}
 		&__heading {
-			font-size: 14px;
+			font-size: 12px!important;
 			font-weight: bold;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			@include mqMin(s) {
+				font-size: 14px!important;
+			}
 		}
 		&__time {
 			display: block;
-			font-size: 14px;
+			font-size: 12px;
+			@include mqMin(s) {
+				font-size: 14px;
+			}
 		}
 		&__bids {
 			display: block;

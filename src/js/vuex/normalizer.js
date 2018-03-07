@@ -67,7 +67,7 @@ export function refineEbaylist (data) {
 const removeCurrency = val => val.replace('£', '');
 
 export function refineDiscogs (data) {
-	return data.listing.map(el => {
+	return data.map(el => {
 		return {
 			title: lodashGet(el, 'title'),
 			imageUrl: lodashGet(el, 'imageUrl'),
