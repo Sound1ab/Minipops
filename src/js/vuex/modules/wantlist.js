@@ -3,6 +3,7 @@ import {wantlistMachine} from '@/js/vuex/FSM/wantlistMachine';
 import {transition} from '@/js/vuex/fsm-transition';
 import {WANTLIST} from '@/js/vuex/api';
 import {filterAlphabetically} from '@/js/vuex/filter';
+import {removeBrackets} from '@/js/regex/remove-brackets';
 
 export function createPromises (api, releaseIds, user) {
 	return releaseIds.map(el => {
@@ -46,6 +47,7 @@ const actions = {
 			spotifyId = '',
 			imageUrl = ''
 		}}) {
+		album = removeBrackets(album);
 		axios.post(WANTLIST[type], {user, artist, album, spotifyId, imageUrl})
 			.then(() => {
 				dispatch('WANTLIST_TRANSITION', {
