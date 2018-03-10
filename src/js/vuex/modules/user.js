@@ -108,17 +108,41 @@ const actions = {
 	UPDATE_USER_ATTRIBUTE ({dispatch}, {type, params: {session, username, attribute, newValue}}) {
 		axios.post(COGNITO[type], {session, username, attribute, newValue})
 			.then(res => {
-				console.log('res', res);
 				const session = res.data;
 				dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {session, rememberMe: true}});
 			})
-			.catch((err) => {
+			.catch(() => {
 				dispatch('USER_TRANSITION', {type: 'FAILURE'});
-				console.log('err', err);
 			});
 	},
-	UPDATE_LOCAL_USER_ATTRIBUTE ({commit}, {params: {session, attribute, newValue}}) {
+	UPDATE_LOCAL_USER_ATTRIBUTE ({commit}, {params: {attribute, newValue}}) {
 		commit('updateLocalUserAttribute', {attribute, newValue});
+	},
+	CHECKING_FOR_EXPIRED_TOKEN ({dispatch}, {params: {session, path}}) {
+		const idToken = jwtDecode(session.idToken);
+		const username = idToken['cognito:username'];
+		const expDate = idToken.exp;
+		const dateNow = new Date();
+		if (expDate < dateNow) {
+			dispatch('USER_TRANSITION', {type: 'TOKEN_EXPIRED', params: {username, session, path}});
+			return;
+		}
+		dispatch('USER_TRANSITION', {type: 'TOKEN_VALID', params: {session, path}});
+	},
+	REFRESHING_TOKEN ({dispatch}, {type, params: {username, session, path}}) {
+		// console.log('params', username);
+		// console.log('params', session);
+		dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {username, session, path}});
+		// axios.post(COGNITO[type], {session, username})
+		// 	.then(res => {
+		// 		console.log('res', res);
+		// 		const session = res.data;
+		// 		dispatch('USER_TRANSITION', {type: 'SUCCESS', params: {session, rememberMe: true}});
+		// 	})
+		// 	.catch((err) => {
+		// 		dispatch('USER_TRANSITION', {type: 'FAILURE'});
+		// 		console.log('err', err);
+		// 	});
 	}
 };
 

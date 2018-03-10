@@ -32,7 +32,8 @@ export const COGNITO = {
 	VERIFY_USER: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/confirm-registration',
 	RESET: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/forgot-password-reset',
 	VERIFY_RESET: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/forgot-password-verify',
-	UPDATE_USER_ATTRIBUTE: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/update-user-attribute'
+	UPDATE_USER_ATTRIBUTE: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/update-user-attribute',
+	TOKEN_EXPIRED: 'https://10ru70869i.execute-api.us-east-2.amazonaws.com/production/refresh-token'
 };
 
 // https://w4jl7ji5wj.execute-api.us-east-1.amazonaws.com/prod

@@ -15,7 +15,7 @@ export const userMachine = Machine({
 		checkingForUser: {
 			onEntry: ['CHECKING_FOR_USER'],
 			on: {
-				SUCCESS: 'successfullyLoggedIn',
+				SUCCESS: 'checkingForExpiredToken',
 				FAILURE: 'waitingForLogin'
 			}
 		},
@@ -60,11 +60,7 @@ export const userMachine = Machine({
 		loggingIn: {
 			onEntry: ['COGNITO_REQUEST', 'SHOW_LOADING'],
 			on: {
-				SUCCESS: {
-					successfullyLoggedIn: {
-						actions: ['UPDATE_ROUTE']
-					}
-				},
+				SUCCESS: 'successfullyLoggedIn',
 				FAILURE: {
 					waitingForLogin: {
 						actions: ['SHOW_CONFIRMATION']
@@ -109,9 +105,17 @@ export const userMachine = Machine({
 			},
 			onExit: ['HIDE_LOADING']
 		},
-		storingLogin: {
+		checkingForExpiredToken: {
+			onEntry: ['CHECKING_FOR_EXPIRED_TOKEN'],
 			on: {
-				SUCCESS: 'loggingIn',
+				TOKEN_VALID: 'successfullyLoggedIn',
+				TOKEN_EXPIRED: 'refreshingToken'
+			}
+		},
+		refreshingToken: {
+			onEntry: ['REFRESHING_TOKEN'],
+			on: {
+				SUCCESS: 'successfullyLoggedIn',
 				FAILURE: 'waitingForLogin'
 			}
 		},
