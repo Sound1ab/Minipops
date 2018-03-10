@@ -57,7 +57,6 @@ const actions = {
 		}
 	},
 	CHECKING_TAB ({dispatch}, {params: {type, query, tab, user}}) {
-		console.log(type);
 		if (tab === 'artist-releases' && (type === 'SEARCH_DISPATCH' || type === 'WANTLIST_DISPATCH')) {
 			Router.push({path: '/discovery'});
 			tab = 'discovery';
@@ -128,13 +127,11 @@ const getters = {
 	sortItems: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
 		if (state[tab] && state[tab].items && state[tab].items.length > 0) {
-			console.log(state[tab].items.length);
 			return filter[state.sort](state[tab].items);
 		}
 	},
 	averagePrice: (state, getters, rootState) => {
 		const tab = rootState.toggle.state;
-		console.log('tab', tab);
 		if (!state[tab] || !state[tab].items || state[tab].items.length <= 1 || tab === 'artist-releases' || tab === 'discovery') {
 			return;
 		}

@@ -43,7 +43,6 @@ const actions = {
 			});
 	},
 	ADD_ITEM_TO_WATCHERS ({commit, state}, {params: {spotifyId}}) {
-		console.log('add to watchers', spotifyId);
 		const {watchers} = state;
 		if (watchers.includes(spotifyId)) {
 			return;

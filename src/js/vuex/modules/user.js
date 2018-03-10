@@ -46,11 +46,9 @@ const actions = {
 		const {idToken, accessToken, refreshToken} = session;
 		if (rememberMe) {
 			const stringifiedSession = JSON.stringify(session);
-			console.log(stringifiedSession);
 			saveToLocalStorage('vcollect_userId', stringifiedSession);
 		}
 		const decodedJwt = jwtDecode(idToken);
-		console.log(decodedJwt);
 		commit('storeUser', {
 			...state.user,
 			idToken,
@@ -90,7 +88,6 @@ const actions = {
 		})
 			.then(res => {
 				if (res.data.code) {
-					console.log('err:', res.data.message);
 					const message = res.data.message;
 					dispatch('USER_TRANSITION', {type: 'FAILURE', params: {message}});
 				}

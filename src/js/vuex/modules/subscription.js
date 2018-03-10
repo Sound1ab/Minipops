@@ -23,8 +23,7 @@ const actions = {
 				commit('saveServiceRegistration', res);
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS', params});
 			})
-			.catch((err) => {
-				console.log('service worker NOT ready', err);
+			.catch(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			});
 	},
@@ -56,7 +55,6 @@ const actions = {
 						}
 					});
 				} else {
-					console.log('User is NOT subscribed.');
 					dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE', params: {user}});
 				}
 			});
@@ -101,13 +99,11 @@ const actions = {
 					});
 				}
 			})
-			.catch(function (error) {
-				console.log('Error unsubscribing', error);
+			.catch(function () {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'FAILURE'});
 			});
 	},
 	UPDATE_SUBSCRIPTION_ON_SERVER ({dispatch}, {params: {type, subscription, user}}) {
-		console.log('update on server');
 		axios.post(SUBSCRIBE[type], {subscription, user})
 			.then(() => {
 				dispatch('SUBSCRIPTION_TRANSITION', {type: 'SUCCESS'});
