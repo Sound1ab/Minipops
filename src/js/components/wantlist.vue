@@ -76,7 +76,7 @@
 				};
 				const buttons = [watch, remove].filter(el => el);
 				return {
-					translateX: buttons.length > 1 ? 144 : 72,
+					translateX: this.subscriptionReady ? 144 : 72,
 					boundary: 72,
 					buttons
 				};
